@@ -16,7 +16,7 @@ def bruteforce(prefix, suffix, filename, languageId):
         map.append(e)
 
     s = sorted(map, key=operator.itemgetter('referenced'), reverse=True)
-    with open("results="+ ( '%030x' % random.randrange(16**30)) + ".json", 'w') as r:
+    with open("results-"+ ( '%030x' % random.randrange(16**30)) + ".json", 'w') as r:
         r.write(json.dumps(map))
     return s[0]
 
