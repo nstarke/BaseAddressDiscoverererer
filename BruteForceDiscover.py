@@ -28,9 +28,9 @@ def main():
 
     args = parser.parse_args()
     octet1 = bruteforce('', '000000', args.filename, args.languageId)
-    octet2 = bruteforce(('%02x' % octet1['base']), '0000', args.filename, args.languagedId)
-    octet3 = bruteforce(('%02x%02x' % octet1['base'], octet2['base']), '00', args.filename, args.languagedId)
-    octet4 = bruteforce(('%02x%02x%02x' % octet1['base'], octet2['base'], octet3['base']), '', args.filename, args.languagedId)
+    octet2 = bruteforce(('%02x' % octet1['base']), '0000', args.filename, args.languageId)
+    octet3 = bruteforce(('%02x%02x' % octet1['base'], octet2['base']), '00', args.filename, args.languageId)
+    octet4 = bruteforce(('%02x%02x%02x' % octet1['base'], octet2['base'], octet3['base']), '', args.filename, args.languageId)
     
     base = ( '%02x%02x%02x%02x' % octet1['base'], octet2['base'], octet3['base'], octet4['base'])
     print('Winner: ' + base)
