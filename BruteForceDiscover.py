@@ -6,7 +6,7 @@ def bruteforce(prefix, suffix, filename, languageId):
     map = []
     for i in range(256):
         n = '%030x' % random.randrange(16**30)
-        cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + prefix + ('%02d' % i) + suffix + ' -deleteProject | grep CountReferencedStrings.java'
+        cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + prefix + ('%02x' % i) + suffix + ' -deleteProject | grep CountReferencedStrings.java'
         output = subprocess.check_output(cmd, shell=True, text=True)
         referenced = output[output.find("<referenced>") + len("<referenced>"):output.find("</referenced>")]
         total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
@@ -28,11 +28,11 @@ def main():
 
     args = parser.parse_args()
     octet1 = bruteforce('', '000000', args.filename, args.languageId)
-    octet2 = bruteforce(('%02d' % octet1['base']), '0000', args.filename, args.languagedId)
-    octet3 = bruteforce(('%02d%02d' % octet1['base'], octet2['base']), '00', args.filename, args.languagedId)
-    octet4 = bruteforce(('%02d%02d%02d' % octet1['base'], octet2['base'], octet3['base']), '', args.filename, args.languagedId)
+    octet2 = bruteforce(('%02x' % octet1['base']), '0000', args.filename, args.languagedId)
+    octet3 = bruteforce(('%02x%02x' % octet1['base'], octet2['base']), '00', args.filename, args.languagedId)
+    octet4 = bruteforce(('%02x%02x%02x' % octet1['base'], octet2['base'], octet3['base']), '', args.filename, args.languagedId)
     
-    base = ( '%02d%02d%02d%02d' % octet1['base'], octet2['base'], octet3['base'], octet4['base'])
+    base = ( '%02x%02x%02x%02x' % octet1['base'], octet2['base'], octet3['base'], octet4['base'])
     print('Winner: ' + base)
     with open('results.txt', 'w') as r:
         r.write(base)
