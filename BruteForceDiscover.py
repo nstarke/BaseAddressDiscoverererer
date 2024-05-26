@@ -3,7 +3,7 @@
 import argparse, subprocess, random, operator, json
 
 def bruteforce(prefix, suffix, filename, languageId):
-    map = dict()
+    map = []
     for i in range(256):
         n = '%030x' % random.randrange(16**30)
         cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + prefix + ('%02d' % i) + suffix + ' -deleteProject | grep CountReferencedStrings.java'
