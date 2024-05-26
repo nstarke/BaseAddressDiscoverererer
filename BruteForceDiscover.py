@@ -13,7 +13,7 @@ def bruteforce(prefix, suffix, filename, languageId):
         referenced = int(referenced)
         total = int(total)
         e = {'base': i, 'total': total, 'referenced': referenced}
-        map[i] = e
+        map.append(e)
 
     s = sorted(map, key=operator.itemgetter('referenced'), reverse=True)
     print(s[0]['base'])
