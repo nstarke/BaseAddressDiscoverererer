@@ -7,12 +7,13 @@ def main():
         prog="BruteForceDiscover", 
         description="A script that takes raw binary programs and bruteforces their load offset")
     parser.add_argument('filename')
+    parser.add_argument('languageId')
 
     args = parser.parse_args()
     map = dict()
     for i in range(65535):
         n = '%030x' % random.randrange(16**30)
-        cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -import ' + args.filename + ' -postScript CountReferencedStrings.java -processor "ARM:LE:32:Cortex" -loader BinaryLoader -loader-baseAddr ' + hex(i) + '0000 -deleteProject | grep CountReferencedStrings.java'
+        cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -import ' + args.filename + ' -postScript CountReferencedStrings.java -processor ' + args.languageId + ' -loader BinaryLoader -loader-baseAddr ' + hex(i) + '0000 -deleteProject | grep CountReferencedStrings.java'
         output = subprocess.check_output(cmd, shell=True, text=True)
         referenced = output[output.find("<referenced>") + len("<referenced>"):output.find("</referenced>")]
         total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
