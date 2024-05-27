@@ -27,7 +27,7 @@ def bruteforce(prefix, suffix, filename, languageId):
         for t in active:
             t.join()
         if i % 64 == 0:
-            print("\r%d - %d" % (i, datetime.datetime.now() - start))
+            print("\r%d - %d" % (i, (datetime.datetime.now() - start).total_seconds()))
     d = datetime.datetime.now()
     s = sorted(map, key=operator.itemgetter('referenced'), reverse=True)
     with open("results" + d.strftime("%Y%m%d%H%M%S") + ".json", 'w') as r:
