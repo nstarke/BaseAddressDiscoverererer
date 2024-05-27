@@ -17,10 +17,10 @@ def bruteforce(prefix, suffix, filename, languageId):
     cpus = multiprocessing.cpu_count() - 4
     map = []
     start = datetime.datetime.now()
-    for i in range(0xffff):
+    for i in range(8192):
         active = []
         for t in range(cpus): 
-            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%02x' % (i + t)) + suffix, map))
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%02x' % ((i * 8) + t)) + suffix, map))
             active.append(x)
             x.start()
         
