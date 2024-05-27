@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse, subprocess, random, operator, json, multiprocessing, threading, datetime
+import argparse, subprocess, random, operator, json, multiprocessing, threading, datetime, math
 
 def run_ghidra(filename, languageId, address, map):
     n = ( '%030x' % random.randrange(16**30))
@@ -17,10 +17,10 @@ def bruteforce(prefix, suffix, filename, languageId):
     cpus = multiprocessing.cpu_count() - 4
     map = []
     start = datetime.datetime.now()
-    for i in range(8192):
+    for i in range(math.ceil(65536 / cpus)):
         active = []
         for t in range(cpus): 
-            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%02x' % ((i * 8) + t)) + suffix, map))
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%02x' % ((i * cpus) + t)) + suffix, map))
             active.append(x)
             x.start()
         
