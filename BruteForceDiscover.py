@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-import argparse, subprocess, random, operator, json
+import argparse, subprocess, random, operator, json, multiprocessing, sys
 
-def bruteforce(prefix, suffix, filename, languageId):
+def bruteforce(prefix, suffix, filename, languageId, ran):
     map = []
-    for i in range(256):
-        n = '%030x' % random.randrange(16**30)
-        cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + prefix + ('%02x' % i) + suffix + ' -deleteProject | grep CountReferencedStrings.java'
+    cpus = str(multiprocessing.cpu_count() - 2)
+    for i in range(ran):
+        cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp tmpBaseAddress -max-cpu ' + cpus + ' -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + prefix + ('%02x' % i) + suffix + ' -deleteProject | grep CountReferencedStrings.java'
         output = subprocess.check_output(cmd, shell=True, text=True)
         referenced = output[output.find("<referenced>") + len("<referenced>"):output.find("</referenced>")]
         total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
@@ -28,12 +28,12 @@ def main():
     parser.add_argument('languageId')
 
     args = parser.parse_args()
-    octet1 = bruteforce('', '000000', args.filename, args.languageId)
-    octet2 = bruteforce(('%02x' % octet1['base']), '0000', args.filename, args.languageId)
-    octet3 = bruteforce('%02x%02x' % (octet1['base'], octet2['base']), '00', args.filename, args.languageId)
-    octet4 = bruteforce('%02x%02x%02x' % (octet1['base'], octet2['base'], octet3['base']), '', args.filename, args.languageId)
-    
-    base = ( '%02x%02x%02x%02x' % octet1['base'], octet2['base'], octet3['base'], octet4['base'])
+    octet1 = bruteforce('00', '0000', args.filename, args.languageId, 0xFF)
+    octet2 = bruteforce('', '%02x' % (octet1['base']) + '0000', args.filename, args.languageId, 0xFF)
+    octet3 = bruteforce('%02x%02x' % (octet2['base'], octet1['base']), '00', args.filename, args.languageId, 0xFF)
+    #octet4 = bruteforce('%02x%02x%02x' % (octet1['base'], octet2['base'], octet3['base']), '', args.filename, args.languageId)
+    base = '0x%02x%02x%02x00' % (octet2['base'], octet1['base'], octet3['base'])
+    #base = '%02x%02x%02x%02x' % (octet1['base'], octet2['base'], octet3['base'], octet4['base'])
     print('Winner: ' + base)
     with open('results.txt', 'w') as r:
         r.write(base)
