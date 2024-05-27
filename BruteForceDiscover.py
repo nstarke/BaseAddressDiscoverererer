@@ -1,22 +1,36 @@
 #!/usr/bin/env python3
 
-import argparse, subprocess, random, operator, json, multiprocessing, sys
+import argparse, subprocess, random, operator, json, multiprocessing, threading, datetime
 
-def bruteforce(prefix, suffix, filename, languageId, ran):
+def run_ghidra(filename, languageId, address, map):
+    n = ( '%030x' % random.randrange(16**30))
+    cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -max-cpu 1 -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + address + ' -deleteProject | grep CountReferencedStrings.java'
+    output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
+    referenced = output[output.find("<referenced>") + len("<referenced>"):output.find("</referenced>")]
+    total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
+    referenced = int(referenced)
+    total = int(total)
+    e = {'base': address, 'total': total, 'referenced': referenced}
+    map.append(e)
+
+def bruteforce(prefix, suffix, filename, languageId):
+    cpus = multiprocessing.cpu_count() - 4
     map = []
-    cpus = str(multiprocessing.cpu_count() - 2)
-    for i in range(ran):
-        cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp tmpBaseAddress -max-cpu ' + cpus + ' -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + prefix + ('%02x' % i) + suffix + ' -deleteProject | grep CountReferencedStrings.java'
-        output = subprocess.check_output(cmd, shell=True, text=True)
-        referenced = output[output.find("<referenced>") + len("<referenced>"):output.find("</referenced>")]
-        total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
-        referenced = int(referenced)
-        total = int(total)
-        e = {'base': i, 'total': total, 'referenced': referenced}
-        map.append(e)
-
+    start = datetime.datetime.now()
+    for i in range(0xffff):
+        active = []
+        for t in range(cpus): 
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%02x' % (i + t)) + suffix, map))
+            active.append(x)
+            x.start()
+        
+        for t in active:
+            t.join()
+        if i % 64 == 0:
+            print("\r%d - %d" % (i, datetime.datetime.now() - start))
+    d = datetime.datetime.now()
     s = sorted(map, key=operator.itemgetter('referenced'), reverse=True)
-    with open("results-"+ ( '%030x' % random.randrange(16**30)) + ".json", 'w') as r:
+    with open("results" + d.strftime("%Y%m%d%H%M%S") + ".json", 'w') as r:
         r.write(json.dumps(map))
     return s[0]
 
@@ -28,12 +42,9 @@ def main():
     parser.add_argument('languageId')
 
     args = parser.parse_args()
-    octet1 = bruteforce('00', '0000', args.filename, args.languageId, 0xFF)
-    octet2 = bruteforce('', '%02x' % (octet1['base']) + '0000', args.filename, args.languageId, 0xFF)
-    octet3 = bruteforce('%02x%02x' % (octet2['base'], octet1['base']), '00', args.filename, args.languageId, 0xFF)
-    #octet4 = bruteforce('%02x%02x%02x' % (octet1['base'], octet2['base'], octet3['base']), '', args.filename, args.languageId)
-    base = '0x%02x%02x%02x00' % (octet2['base'], octet1['base'], octet3['base'])
-    #base = '%02x%02x%02x%02x' % (octet1['base'], octet2['base'], octet3['base'], octet4['base'])
+    half1 = bruteforce('', '0000', args.filename, args.languageId)
+    half2 = bruteforce(half1['base'], '', args.filename, args.languageId)
+    base = '0x%04x%04x' % (half1['base'] % half2['base'])
     print('Winner: ' + base)
     with open('results.txt', 'w') as r:
         r.write(base)
