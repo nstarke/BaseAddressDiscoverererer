@@ -12,6 +12,8 @@ def run_ghidra(filename, languageId, address, map):
     total = int(total)
     e = {'base': address, 'total': total, 'referenced': referenced}
     map.append(e)
+    with open("results/results-%04x.txt" % (address), 'w') as r:
+        r.write(json.dumps(map))
 
 def bruteforce(prefix, suffix, filename, languageId):
     cpus = multiprocessing.cpu_count() - 4
@@ -31,7 +33,7 @@ def bruteforce(prefix, suffix, filename, languageId):
         print("\r%d - %d" % (i, (datetime.datetime.now() - start).total_seconds()))
     d = datetime.datetime.now()
     s = sorted(map, key=operator.itemgetter('referenced'), reverse=True)
-    with open("results" + d.strftime("%Y%m%d%H%M%S") + ".json", 'w') as r:
+    with open("results/results-" + d.strftime("%Y%m%d%H%M%S") + ".json", 'w') as r:
         r.write(json.dumps(map))
     return s[0]
 
@@ -44,10 +46,9 @@ def main():
 
     args = parser.parse_args()
     half1 = bruteforce('', '0000', args.filename, args.languageId)
-    half2 = bruteforce(half1['base'], '', args.filename, args.languageId)
-    base = '0x%04x%04x' % (half1['base'], half2['base'])
+    base = '0x%04x0000' % (half1['base'])
     print('Winner: ' + base)
-    with open('results.txt', 'w') as r:
+    with open('results/winner.txt', 'w') as r:
         r.write(base)
 
 if __name__ == "__main__":        
