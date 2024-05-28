@@ -20,7 +20,7 @@ def bruteforce(prefix, suffix, filename, languageId):
     for i in range(math.ceil(65536 / cpus)):
         active = []
         for t in range(cpus): 
-            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%02x' % ((i * cpus) + t)) + suffix, map))
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%04x' % ((i * cpus) + t)) + suffix, map))
             active.append(x)
             x.start()
         
