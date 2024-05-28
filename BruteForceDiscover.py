@@ -13,7 +13,7 @@ def run_ghidra(filename, languageId, address, map):
     e = {'base': address, 'total': total, 'referenced': referenced}
     map.append(e)
     with open("results/results-%04x.txt" % (address), 'w') as r:
-        r.write(json.dumps(map))
+        r.write(json.dumps(e))
 
 def bruteforce(prefix, suffix, filename, languageId):
     cpus = multiprocessing.cpu_count() - 4
