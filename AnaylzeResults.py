@@ -7,6 +7,7 @@ def main():
     for file in glob.glob("results/results-*.txt"):
         with open(file, 'r') as f:
             j = json.loads(f.read())
+            j['base'] = '%04x0000' % (j['base'])
             results.append(j)
 
     s = sorted(results, key=operator.itemgetter('referenced'), reverse=True)
