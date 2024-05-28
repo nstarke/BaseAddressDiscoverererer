@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse, subprocess, random, operator, json
+import argparse, glob, operator, json
 
 def main():
 
@@ -10,10 +10,15 @@ def main():
     parser.add_argument('filename')
     args = parser.parse_args()
     
-    with open(args.filename, 'r') as f:
-        j = json.loads(f.read())
-        s = sorted(j, key=operator.itemgetter('referenced'), reverse=True)
-        print(json.dumps(s[:10]))
+    results = []
+    for file in glob.glob("results/results-*.txt"):
+        with open(file, 'r') as f:
+            j = json.loads(f.read())
+            results.append(j)
+
+    s = sorted(results, key=operator.itemgetter('referenced'), reverse=True)
+    print(json.dumps(s[:10]))
+            
 
 if __name__ == "__main__":
     main()
