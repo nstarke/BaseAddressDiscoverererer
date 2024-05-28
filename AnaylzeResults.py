@@ -3,13 +3,6 @@
 import argparse, glob, operator, json
 
 def main():
-
-    parser = argparse.ArgumentParser(
-        prog="AnalyzeBFResults", 
-        description="A script that takes the bruteforce results and displays the 10 most likely base address objects in json format.")
-    parser.add_argument('filename')
-    args = parser.parse_args()
-    
     results = []
     for file in glob.glob("results/results-*.txt"):
         with open(file, 'r') as f:
