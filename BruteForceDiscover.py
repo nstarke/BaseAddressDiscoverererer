@@ -15,18 +15,18 @@ def run_ghidra(filename, languageId, address, map):
     with open("results/results-%04x.txt" % (address), 'w') as r:
         r.write(json.dumps(e))
 
-def bruteforce(prefix, suffix, filename, languageId, start):
-    if not start:
-        start = 0
+def bruteforce(prefix, suffix, filename, languageId, startIdx):
+    if not startIdx:
+        startIdx = 0
     cpus = multiprocessing.cpu_count() - 4
     if cpus <= 0:
         cpus = 1
     map = []
     start = datetime.datetime.now()
-    for i in range(math.ceil(65536 / cpus) - start):
+    for i in range(math.ceil(65536 / cpus) - startIdx):
         active = []
         for t in range(cpus): 
-            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%04x' % (((i * cpus) + t) + start)) + suffix, map))
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%04x' % (((i * cpus) + t) + startIdx)) + suffix, map))
             active.append(x)
             x.start()
         
