@@ -10,7 +10,7 @@ def run_ghidra(filename, languageId, address, map):
     total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
     referenced = int(referenced)
     total = int(total)
-    address = int(address)
+    address = int(address, 16)
     e = {'base': address, 'total': total, 'referenced': referenced}
     map.append(e)
     with open("results/results-%04x.txt" % (address), 'w') as r:
