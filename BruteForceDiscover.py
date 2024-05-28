@@ -43,7 +43,7 @@ def main():
     args = parser.parse_args()
     half1 = bruteforce('', '0000', args.filename, args.languageId)
     half2 = bruteforce(half1['base'], '', args.filename, args.languageId)
-    base = '0x%04x%04x' % (half1['base'] % half2['base'])
+    base = '0x%04x%04x' % (half1['base'], half2['base'])
     print('Winner: ' + base)
     with open('results.txt', 'w') as r:
         r.write(base)
