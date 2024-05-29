@@ -4,7 +4,7 @@ import argparse, subprocess, random, operator, json, multiprocessing, threading,
 
 def run_ghidra(filename, languageId, address, map):
     n = ( '%030x' % random.randrange(16**30))
-    cmd = '/opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -max-cpu 1 -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + address + ' -deleteProject | grep CountReferencedStrings.java'
+    cmd = 'timeout -k 60 60 /opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -max-cpu 1 -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + address + ' -deleteProject | grep CountReferencedStrings.java'
     output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     referenced = output[output.find("<referenced>") + len("<referenced>"):output.find("</referenced>")]
     total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
