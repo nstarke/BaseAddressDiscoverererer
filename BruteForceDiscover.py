@@ -22,7 +22,7 @@ def bruteforce(startIdx, end, filename, languageId, interval):
         cpus = cpus - 8
     map = []
     start = datetime.datetime.now()
-    for i in range(math.ceil((((end * interval) - (startIdx * interval)) / interval) / cpus)):
+    for i in range(math.ceil((((end) - (startIdx)) / interval) / cpus)):
         active = []
         for t in range(cpus): 
             x = threading.Thread(target=run_ghidra, args=(filename, languageId, ((startIdx) + ((i + t) * interval)), map))
