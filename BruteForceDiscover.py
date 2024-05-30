@@ -42,9 +42,9 @@ def main():
         description="A script that takes raw binary programs and bruteforces their load offset")
     parser.add_argument('filename')
     parser.add_argument('languageId')
-    parser.add_argument('-s', '--start', type=int, default=0, const=0, nargs='?')
-    parser.add_argument('-e', '--end', type=int, default=0x10000, const=0x10000, nargs='?')
-    parser.add_argument('-i', '--interval', type=int, default=0x10000, const=0x10000, nargs='?')
+    parser.add_argument('-s', '--start', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
+    parser.add_argument('-e', '--end', type=lambda x: int(x, 16), default=0x10000, const=0x10000, nargs='?')
+    parser.add_argument('-i', '--interval', type=lambda x: int(x, 16), default=0x10000, const=0x10000, nargs='?')
 
     args = parser.parse_args()
     half1 = bruteforce(args.start, args.end, args.filename, args.languageId, args.interval)
