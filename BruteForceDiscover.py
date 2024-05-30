@@ -16,18 +16,17 @@ def run_ghidra(filename, languageId, address, map):
     with open("results/results-%04x.txt" % (address), 'w') as r:
         r.write(json.dumps(e))
 
-def bruteforce(prefix, suffix, filename, languageId, startIdx):
-    if not startIdx:
-        startIdx = 0
-    cpus = multiprocessing.cpu_count() - 4
-    if cpus <= 0:
-        cpus = 1
+def bruteforce(startIdx, end, filename, languageId, interval):
+    cpus = multiprocessing.cpu_count() 
+
+    if cpus > 8:
+        cpus = cpus - 8
     map = []
     start = datetime.datetime.now()
-    for i in range(math.ceil(65536 / cpus) - startIdx):
+    for i in range(math.ceil((((end * interval) - (startIdx * interval)) / interval) / cpus)):
         active = []
         for t in range(cpus): 
-            x = threading.Thread(target=run_ghidra, args=(filename, languageId, prefix + ('%04x' % (((i * cpus) + t) + startIdx)) + suffix, map))
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, '%08x' % ((startIdx * interval) + (i * interval) + (t * interval)), map))
             active.append(x)
             x.start()
         
@@ -44,10 +43,12 @@ def main():
         description="A script that takes raw binary programs and bruteforces their load offset")
     parser.add_argument('filename')
     parser.add_argument('languageId')
-    parser.add_argument('-s', '--start', type=int)
+    parser.add_argument('-s', '--start', type=int, default=0, const=0, nargs='?')
+    parser.add_argument('-e', '--end', type=int, default=0x10000, const=0x10000, nargs='?')
+    parser.add_argument('-i', '--interval', type=int, default=0x10000, const=0x10000, nargs='?')
 
     args = parser.parse_args()
-    half1 = bruteforce('', '0000', args.filename, args.languageId, args.start)
+    half1 = bruteforce(args.start, args.end, args.filename, args.languageId, args.interval)
     base = '0x%04x0000' % (half1['base'])
     print('Winner: ' + base)
     with open('results/winner.txt', 'w') as r:
