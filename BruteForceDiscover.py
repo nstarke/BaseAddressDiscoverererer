@@ -4,7 +4,7 @@ import argparse, subprocess, random, operator, json, multiprocessing, threading,
 
 def run_ghidra(filename, languageId, address, map):
     n = ( '%030x' % random.randrange(16**30))
-    cmd = 'timeout -k 60 60 /opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -max-cpu 1 -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + hex(address).replace('0x', '') + ' -deleteProject | grep CountReferencedStrings.java'
+    cmd = 'timeout -k 60 1800 /opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -max-cpu 1 -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + hex(address).replace('0x', '') + ' -deleteProject | grep CountReferencedStrings.java'
     output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     referenced = output[output.find("<referenced>") + len("<referenced>"):output.find("</referenced>")]
     total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
@@ -18,8 +18,8 @@ def run_ghidra(filename, languageId, address, map):
 def bruteforce(startIdx, end, filename, languageId, interval):
     cpus = multiprocessing.cpu_count() 
 
-    if cpus > 12:
-        cpus = cpus - 12
+    if cpus > 8:
+        cpus = cpus - 8
     map = []
     start = datetime.datetime.now()
     for i in range(math.ceil((((end * interval) - (startIdx * interval)) / interval) / cpus)):
