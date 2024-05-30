@@ -4,7 +4,7 @@ import argparse, subprocess, random, operator, json, multiprocessing, threading,
 
 def run_ghidra(filename, languageId, address, map):
     n = ( '%030x' % random.randrange(16**30))
-    cmd = 'timeout -k 60 60 /opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -max-cpu 1 -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + address + ' -deleteProject | grep CountReferencedStrings.java'
+    cmd = 'timeout -k 60 60 /opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -max-cpu 1 -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + hex(address).replace('0x', '') + ' -deleteProject | grep CountReferencedStrings.java'
     output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     referenced = output[output.find("<referenced>") + len("<referenced>"):output.find("</referenced>")]
     total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
@@ -13,7 +13,7 @@ def run_ghidra(filename, languageId, address, map):
     address = int(address, 16)
     e = {'base': address, 'total': total, 'referenced': referenced}
     map.append(e)
-    with open("results/results-%04x.txt" % (address), 'w') as r:
+    with open("results/results-%08x.txt" % (address), 'w') as r:
         r.write(json.dumps(e))
 
 def bruteforce(startIdx, end, filename, languageId, interval):
@@ -26,7 +26,7 @@ def bruteforce(startIdx, end, filename, languageId, interval):
     for i in range(math.ceil((((end * interval) - (startIdx * interval)) / interval) / cpus)):
         active = []
         for t in range(cpus): 
-            x = threading.Thread(target=run_ghidra, args=(filename, languageId, '%08x' % ((startIdx * interval) + (i * interval) + (t * interval)), map))
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, ((startIdx) + ((i + t) * interval)), map))
             active.append(x)
             x.start()
         
