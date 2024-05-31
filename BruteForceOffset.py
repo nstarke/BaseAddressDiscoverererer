@@ -5,7 +5,7 @@ import argparse, pathlib, random, operator, json, multiprocessing, threading, da
 def main():
     parser = argparse.ArgumentParser(
         prog="BruteForceOffset",
-        help="Divide firmware into n sized chunks to use with BruteForceAddress.py"
+        description="Divide firmware into n sized chunks to use with BruteForceAddress.py"
     )
 
     parser.add_argument('filename')
