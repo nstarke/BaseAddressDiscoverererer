@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse, subprocess, random, operator, json, multiprocessing, threading, datetime, math
+import argparse, pathlib, random, operator, json, multiprocessing, threading, datetime, math
 
 def main():
     parser = argparse.ArgumentParser(
@@ -12,12 +12,13 @@ def main():
     parser.add_argument('interval')
     parser.add_argument('count')
     args = parser.parse_args() 
-    with open(args.filename, 'rb') as f:
+    p = pathlib.Path(args.filename)
+    with open(p, 'rb') as f:
         data = f.read()
 
         for i in range(args.count):
             offset = i * args.interval
-            with open('binaries/' + args.filename + "_" + offset + ".headerless.bin", 'wb') as w:
+            with open('binaries/' + p.name + "_" + offset + ".headerless.bin", 'wb') as w:
                 w.write(data[offset:])
 
 if __name__ == "__main__":        
