@@ -36,10 +36,11 @@ def main():
                 'total' : winner['total'] 
                 }
             results.append(e)
-            s = sorted(map, key=operator.itemgetter('referenced'), reverse=True)
-            print(json.dumps(s[:10]))
-            with open('results/offset-winner.txt', 'w') as r:
-                r.write(json.dumps(s))
+            
+        s = sorted(results, key=operator.itemgetter('referenced'), reverse=True)
+        print("Winner: " + json.dumps(s[0]))
+        with open('results/' + str(offset) + '/offset-winner.json', 'w') as r:
+            r.write(json.dumps(s))
 
 if __name__ == "__main__":        
     main()

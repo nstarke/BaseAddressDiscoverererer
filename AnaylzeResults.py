@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-import argparse, glob, operator, json
+import argparse, glob, operator, json, pathlib
 
 def main():
     results = []
     for file in glob.glob("results/**/results-*.json"):
-        with open(file, 'r') as f:
+        p = pathlib.Path(file)
+        with open(p, 'r') as f:
             j = json.loads(f.read())
             j['base'] = hex(j['base'])
             results.append(j)

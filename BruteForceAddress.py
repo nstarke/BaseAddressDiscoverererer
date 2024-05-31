@@ -10,7 +10,7 @@ def run_ghidra(filename, languageId, address, map, idx):
     total = output[output.find("<total>") + len("<total>"):output.find("</total>")]
     referenced = int(referenced)
     total = int(total)
-    e = {'base': address, 'total': total, 'referenced': referenced}
+    e = {'base': address, 'total': total, 'referenced': referenced, 'offset': idx }
     map.append(e)
     with open("results/" + str(idx) + "/results-%08x.json" % (address), 'w') as r:
         r.write(json.dumps(e))
