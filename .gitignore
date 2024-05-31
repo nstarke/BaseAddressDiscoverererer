@@ -1,3 +1,6 @@
 *.txt
 *.json
 *.zip
+results/*
+binaries/*
+__pycache__
