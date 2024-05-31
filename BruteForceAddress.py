@@ -12,12 +12,12 @@ def run_ghidra(filename, languageId, address, map, idx):
     total = int(total)
     e = {'base': address, 'total': total, 'referenced': referenced}
     map.append(e)
-    with open("results/" + str(idx) + "/results-%08x.txt" % (address), 'w') as r:
+    with open("results/" + str(idx) + "/results-%08x.json" % (address), 'w') as r:
         r.write(json.dumps(e))
 
 def bruteforce(startIdx, end, filename, languageId, interval, idx):
     cpus = multiprocessing.cpu_count() 
-
+    pathlib.Path("results/" + str(idx)).mkdir(parents=True, exist_ok=True)
     if cpus > 8:
         cpus = cpus - 8
     map = []
@@ -48,7 +48,7 @@ def main():
     parser.add_argument('-x', '--index', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
 
     args = parser.parse_args()
-    pathlib.Path("results/" + str(args.index)).mkdir(parents=True, exist_ok=True)
+    
     half1 = bruteforce(args.start, args.end, args.filename, args.languageId, args.interval, args.index)
     base = '0x%08x' % (half1['base'])
     print('Winner: ' + base)

@@ -4,7 +4,7 @@ import argparse, glob, operator, json
 
 def main():
     results = []
-    for file in glob.glob("results/results-*.txt"):
+    for file in glob.glob("results/**/results-*.json"):
         with open(file, 'r') as f:
             j = json.loads(f.read())
             j['base'] = hex(j['base'])
