@@ -9,8 +9,8 @@ def main():
     )
 
     parser.add_argument('filename')
-    parser.add_argument('interval')
-    parser.add_argument('count')
+    parser.add_argument('-i', '--interval', type=lambda x: int(x, 16), default=0x10, const=0x10, nargs='?')
+    parser.add_argument('-c', '--count' , type=lambda x: int(x, 16), default=0x20, const=0x20, nargs='?')
     args = parser.parse_args() 
     p = pathlib.Path(args.filename)
     with open(p, 'rb') as f:
