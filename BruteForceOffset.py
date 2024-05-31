@@ -18,7 +18,7 @@ def main():
 
         for i in range(args.count):
             offset = i * args.interval
-            with open('binaries/' + p.name + "_" + offset + ".headerless.bin", 'wb') as w:
+            with open('binaries/' + p.name + "_" + str(offset) + ".headerless.bin", 'wb') as w:
                 w.write(data[offset:])
 
 if __name__ == "__main__":        
