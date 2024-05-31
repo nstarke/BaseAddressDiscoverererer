@@ -28,7 +28,7 @@ def main():
         results = []
         for i in range(args.count):
             offset = i * args.address
-            winner = BruteForceAddress.bruteforce(args.start, args.end, 'binaries/' + p.name + "_" + str(offset) + ".headerless.bin", args.languageId, args.interval, i)
+            winner = BruteForceAddress.bruteforce(args.start, args.end, 'binaries/' + p.name + "_" + str(offset) + ".headerless.bin", args.languageId, args.interval, offset)
             e = {
                 'offset': offset, 
                 'result': winner['base'], 
