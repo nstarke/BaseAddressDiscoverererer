@@ -58,7 +58,7 @@ def main():
         h = hashlib.sha256()
         h.update(f.read())
         hash = h.hexdigest()
-    pathlib.Path("results/" + hash + '/' + str(idx)).mkdir(parents=True, exist_ok=True)
+    pathlib.Path("results/" + hash + '/' + str(args.index)).mkdir(parents=True, exist_ok=True)
     half1 = bruteforce(args.start, args.end, args.filename, args.languageId, args.interval, args.index, hash)
     base = '0x%08x' % (half1['base'])
     print('Winner: ' + base)
