@@ -39,7 +39,7 @@ def main():
             
         s = sorted(results, key=operator.itemgetter('referenced'), reverse=True)
         print("Winner: " + json.dumps(s[0]))
-        with open('results/' + str(offset) + '/offset-winner.json', 'w') as r:
+        with open('results/offset-winners.json', 'w') as r:
             r.write(json.dumps(s))
 
 if __name__ == "__main__":        

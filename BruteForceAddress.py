@@ -3,6 +3,12 @@
 import argparse, subprocess, random, operator, json, multiprocessing, threading, datetime, math, pathlib
 
 def run_ghidra(filename, languageId, address, map, idx):
+    p = pathlib.Path("results/" + str(idx) + "/results-%08x.json" % (address))
+    if p.exists():
+        with open(p, 'r') as f:
+            map.append(json.loads(f.read()))
+        return
+    
     n = ( '%030x' % random.randrange(16**30))
     cmd = 'timeout -k 60 1800 /opt/ghidra-11.0.3/support/analyzeHeadless /tmp ' + n + ' -max-cpu 1 -import ' + filename + ' -postScript CountReferencedStrings.java -processor ' + languageId + ' -loader BinaryLoader -loader-baseAddr ' + hex(address).replace('0x', '') + ' -deleteProject | grep CountReferencedStrings.java'
     output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
@@ -12,7 +18,7 @@ def run_ghidra(filename, languageId, address, map, idx):
     total = int(total)
     e = {'base': address, 'total': total, 'referenced': referenced, 'offset': idx }
     map.append(e)
-    with open("results/" + str(idx) + "/results-%08x.json" % (address), 'w') as r:
+    with open(p, 'w') as r:
         r.write(json.dumps(e))
 
 def bruteforce(startIdx, end, filename, languageId, interval, idx):
