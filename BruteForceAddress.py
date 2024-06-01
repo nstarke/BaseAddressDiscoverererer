@@ -49,7 +49,7 @@ def main():
     parser.add_argument('filename')
     parser.add_argument('languageId')
     parser.add_argument('-s', '--start', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
-    parser.add_argument('-e', '--end', type=lambda x: int(x, 16), default=0x10000, const=0x10000, nargs='?')
+    parser.add_argument('-e', '--end', type=lambda x: int(x, 16), default=0xffffffff, const=0xffffffff, nargs='?')
     parser.add_argument('-i', '--interval', type=lambda x: int(x, 16), default=0x10000, const=0x10000, nargs='?')
     parser.add_argument('-x', '--index', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
 
