@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import argparse, subprocess, random, operator, json, multiprocessing, threading, datetime, math, pathlib
+import argparse, subprocess, random, operator, json, multiprocessing, threading, datetime, math, pathlib, hashlib
 
-def run_ghidra(filename, languageId, address, map, idx):
-    p = pathlib.Path("results/" + str(idx) + "/results-%08x.json" % (address))
+def run_ghidra(filename, languageId, address, map, idx, hash):
+    p = pathlib.Path("results/" + hash + '/' + str(idx) + "/results-%08x.json" % (address))
     if p.exists():
         with open(p, 'r') as f:
             map.append(json.loads(f.read()))
@@ -21,9 +21,9 @@ def run_ghidra(filename, languageId, address, map, idx):
     with open(p, 'w') as r:
         r.write(json.dumps(e))
 
-def bruteforce(startIdx, end, filename, languageId, interval, idx):
-    cpus = multiprocessing.cpu_count() 
-    pathlib.Path("results/" + str(idx)).mkdir(parents=True, exist_ok=True)
+def bruteforce(startIdx, end, filename, languageId, interval, idx, hash):
+    cpus = multiprocessing.cpu_count()
+    
     if cpus > 8:
         cpus = cpus - 8
     map = []
@@ -31,7 +31,7 @@ def bruteforce(startIdx, end, filename, languageId, interval, idx):
     for i in range(math.ceil((((end) - (startIdx)) / interval) / cpus)):
         active = []
         for t in range(cpus): 
-            x = threading.Thread(target=run_ghidra, args=(filename, languageId, ((startIdx) + ((i + t) * interval)), map, idx))
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, ((startIdx) + ((i + t) * interval)), map, idx, hash))
             active.append(x)
             x.start()
         
@@ -54,8 +54,12 @@ def main():
     parser.add_argument('-x', '--index', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
 
     args = parser.parse_args()
-    
-    half1 = bruteforce(args.start, args.end, args.filename, args.languageId, args.interval, args.index)
+    with open(args.filename, 'rb') as f:
+        h = hashlib.sha256()
+        h.update(f.read())
+        hash = h.hexdigest()
+    pathlib.Path("results/" + hash + '/' + str(idx)).mkdir(parents=True, exist_ok=True)
+    half1 = bruteforce(args.start, args.end, args.filename, args.languageId, args.interval, args.index, hash)
     base = '0x%08x' % (half1['base'])
     print('Winner: ' + base)
     with open('results/winner.txt', 'w') as r:

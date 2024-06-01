@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse, pathlib, BruteForceAddress, operator, json
+import argparse, pathlib, BruteForceAddress, operator, json, hashlib
 
 def main():
     parser = argparse.ArgumentParser(
@@ -20,20 +20,28 @@ def main():
     p = pathlib.Path(args.filename)
     with open(p, 'rb') as f:
         data = f.read()
-
+        h = hashlib.sha256()
+        h.update(data)
+        hash = h.hexdigest()
+        pathlib.Path("results/" + hash).mkdir(parents=True, exist_ok=True)
+        pathlib.Path("binaries/" + hash).mkdir(parents=True, exist_ok=True)
         for i in range(args.count):
             offset = i * args.address
-            with open('binaries/' + p.name + "_" + str(offset) + ".headerless.bin", 'wb') as w:
+            check = pathlib.Path('binaries/' + hash + '/' + p.name + "_" + str(offset) + ".headerless.bin")
+            if check.exists():
+                continue
+            with open(check, 'wb') as w:
                 w.write(data[offset:])
         results = []
         for i in range(args.count):
             offset = i * args.address
-            winner = BruteForceAddress.bruteforce(args.start, args.end, 'binaries/' + p.name + "_" + str(offset) + ".headerless.bin", args.languageId, args.interval, offset)
+            winner = BruteForceAddress.bruteforce(args.start, args.end, 'binaries/' + hash + '/' + p.name + "_" + str(offset) + ".headerless.bin", args.languageId, args.interval, offset, hash)
             e = {
                 'offset': offset, 
                 'result': winner['base'], 
                 'referenced': winner['referenced'], 
-                'total' : winner['total'] 
+                'total' : winner['total'],
+                'firmware': p.name 
                 }
             results.append(e)
             

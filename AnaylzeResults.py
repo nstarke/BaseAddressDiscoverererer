@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import argparse, glob, operator, json, pathlib
+import argparse, glob, operator, json, pathlib, hashlib
 
 def main():
     parser = argparse.ArgumentParser(
@@ -9,10 +9,16 @@ def main():
     )
 
     parser.add_argument('-c', '--count', type=int, default=10, const=10, nargs='?')
+    parser.add_argument('filename')
+
     args = parser.parse_args()
-    
+    with open(args.filename, 'rb') as f:
+        h = hashlib.sha256()
+        h.update(f.read())
+        hash = h.hexdigest()
+
     results = []
-    for file in glob.glob("results/**/results-*.json"):
+    for file in glob.glob("./results/" + hash + "/**/results-*.json"):
         p = pathlib.Path(file)
         with open(p, 'r') as f:
             j = json.loads(f.read())
