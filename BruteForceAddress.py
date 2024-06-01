@@ -31,7 +31,7 @@ def bruteforce(startIdx, end, filename, languageId, interval, idx, hash):
     for i in range(math.ceil((((end) - (startIdx)) / interval) / cpus)):
         active = []
         for t in range(cpus): 
-            x = threading.Thread(target=run_ghidra, args=(filename, languageId, ((startIdx) + ((i + t) * interval)), map, idx, hash))
+            x = threading.Thread(target=run_ghidra, args=(filename, languageId, (startIdx + (i * interval * cpus) + (t * interval)), map, idx, hash))
             active.append(x)
             x.start()
         
