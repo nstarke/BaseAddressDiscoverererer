@@ -23,9 +23,6 @@ def run_ghidra(filename, languageId, address, map, idx, hash):
 
 def bruteforce(startIdx, end, filename, languageId, interval, idx, hash):
     cpus = multiprocessing.cpu_count()
-    
-    if cpus > 8:
-        cpus = cpus - 8
     map = []
     start = datetime.datetime.now()
     for i in range(math.ceil((((end) - (startIdx)) / interval) / cpus)):
