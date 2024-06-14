@@ -1,19 +1,8 @@
 # BaseAddressDiscoverererer
-A python3 script for generating a list of possible base addresses given a raw binary program
 
-This program works by looking for 32-bit words with the least two significant bytes being null.  This list becomes the candidate list.  The script then checks if any other double words have the same two most significant bytes as the candidate list and outputs the top 5 highest matches.
+This is a set of python3 scripts for bruteforcing the load address of a raw binary program.  The scripts use ghidra to analyze raw binary data using a series of load addresses and then checking how many internal strings were resolved in the analysis for each base address attempt.  
 
-Example:
+This is a useful toolset when you have a raw binary image with no ELF, PE32, Mach-O, or COFF header, as we sometimes see in low-level boot images for embedded devices (think `U-boot`, etc).
+## Requirements
 
-```
-$ python DiscoverBaseAddress.py u-boot.bin big
-Top 5 results
-('e1a00000', {'count': 2599})
-('e59f0000', {'count': 1818})
-('e3a00000', {'count': 1804})
-('49fb0000', {'count': 1372})
-('ea000000', {'count': 889})
-```
-
-You can then try disassembly with these double words as base addresses.
-In the example above, `49fb0000` was the correct base load address.
+These scripts require Ghidra `11.0.3` to be installed at `/opt/ghidra-11.0.3` and the `CountReferencedStrings.java` to be in one of the ghidra script locations, preferably `~/ghidra_scripts`.  If `CountReferencedStrings.java` is left in the root directory, the scripts will fail to work properly; I recommend you `mv` the `CountReferencedStrings.java` file to a ghidra script directory.  Make sure it is not in the repository directory you are running the scripts from.
