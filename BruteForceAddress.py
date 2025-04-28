@@ -46,9 +46,9 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     p = pathlib.Path(filename)
     o = hex(offset).replace("0x", "")
     
+    print("Building Address/Offset Filesystem Structure")
     for i in range(math.ceil((((end) - (startIdx)) / interval))):
         address = hex(startIdx + (i * interval)).replace('0x', '')
-        print("Importing Address: " + address + " and offset: " + o)
         ws = "workspace/" + p.name + "/out/" + o + "/" + address
         os.makedirs(ws, exist_ok=True)
         os.symlink(filename, ws + "/" + p.name)
@@ -56,10 +56,13 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     os.makedirs("workspace/" + p.name + "/ghidra", exist_ok=True)
     os.makedirs("workspace/" + p.name + "/results/" + o, exist_ok=True)
 
+    print("Running Ghidra Import")
     run_ghidra_import(ghidra_path, p.name, languageId)
     
+    print("Running Ghidra Analysis")
     run_ghidra_analyze(ghidra_path, p.name)
     
+    print("Analyzing Results")
     analyze_xml_result(p.name, o)
     
 
