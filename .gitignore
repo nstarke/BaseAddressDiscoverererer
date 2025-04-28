@@ -2,6 +2,5 @@
 *.json
 *.zip
 .venv
-results/*
-binaries/*
+workspace/*
 __pycache__
