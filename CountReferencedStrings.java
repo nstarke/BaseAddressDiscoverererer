@@ -50,7 +50,7 @@ public class CountReferencedStrings extends GhidraScript {
 		}
 
 		String xml = "<ghidra_result><referenced>" + referencedCount + "</referenced><total>" + totalCount + "</total><address>" + address + "</address><offset>" + offsetFolder.getName() + "</offset></ghidra_result>";
-		FileWriter fw = new FileWriter("workspace/" + name + "/results/result.xml", true);
+		FileWriter fw = new FileWriter("workspace/" + name + "/results/" + offsetFolder.getName() + "/result.xml", true);
 		fw.write(xml);
 		fw.close();
 		println("File appended to");
