@@ -23,6 +23,9 @@ import ghidra.program.model.address.Address;
 import ghidra.program.model.mem.Memory;
 import ghidra.program.util.DefinedDataIterator;
 import ghidra.program.model.listing.Data;
+import ghidra.framework.model.DomainFile;
+import ghidra.framework.model.DomainFolder;
+import java.io.FileWriter;
 
 public class CountReferencedStrings extends GhidraScript {
 
@@ -32,6 +35,9 @@ public class CountReferencedStrings extends GhidraScript {
 		monitor.setMessage("Finding Strings with References");
 		int referencedCount = 0;
 		int totalCount = 0;
+		DomainFile domainFile = currentProgram.getDomainFile();
+		DomainFolder domainFolder = domainFile.getParent();
+		String address = domainFolder.getName();
 		for (Data nextData: DefinedDataIterator.definedStrings(currentProgram) ) {
 			Address strAddr = nextData.getMinAddress();
 			int refCount = currentProgram.getReferenceManager().getReferenceCountTo(strAddr);
@@ -41,7 +47,10 @@ public class CountReferencedStrings extends GhidraScript {
 			}
 		}
 
-		println("Number of referenced strings found: <referenced>" + referencedCount + "</referenced>");
-		println("Total number of strings found: <total>" + totalCount + "</total>");
+		String xml = "<ghidra_result><referenced>" + referencedCount + "</referenced><total>" + totalCount + "</total><address>" + address + "</address></ghidra_result>";
+		FileWriter fw = new FileWriter("/tmp/result.xml", true);
+		fw.write(xml);
+		fw.close();
+		println("File appended to");
 	}
 }

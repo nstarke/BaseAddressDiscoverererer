@@ -1,6 +1,7 @@
 *.txt
 *.json
 *.zip
+.venv
 results/*
 binaries/*
 __pycache__
