@@ -65,7 +65,6 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     print("Analyzing Results")
     analyze_xml_result(p.name, o)
     
-
 def main():
     parser = argparse.ArgumentParser(
         prog="BruteForceDiscover", 
