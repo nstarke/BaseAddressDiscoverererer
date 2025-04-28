@@ -76,9 +76,17 @@ def main():
     parser.add_argument('-i', '--interval', type=lambda x: int(x, 16), default=0x10000, const=0x10000, nargs='?')
     parser.add_argument('-o', '--offset', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
     parser.add_argument('-p', '--ghidra-path', type=str)
+    parser.add_argument('--skip', action='store_true', help="Skip Bruteforce and only perform analysis  ")
+
 
     args = parser.parse_args()
-    bruteforce(args.ghidra_path, args.start, args.end, args.filename, args.languageId, args.interval, args.offset)
+    if args.skip:
+        p = pathlib.Path(args.filename)
+        o = hex(args.offset).replace("0x", "")
+        print("Skipping import and analyzing existing results")
+        analyze_xml_result(p.name, o)
+    else:
+        bruteforce(args.ghidra_path, args.start, args.end, args.filename, args.languageId, args.interval, args.offset)
 
 if __name__ == "__main__":        
     main()
