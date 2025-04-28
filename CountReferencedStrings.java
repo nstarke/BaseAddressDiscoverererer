@@ -37,6 +37,7 @@ public class CountReferencedStrings extends GhidraScript {
 		int totalCount = 0;
 		DomainFile domainFile = currentProgram.getDomainFile();
 		DomainFolder domainFolder = domainFile.getParent();
+		DomainFolder offsetFolder = domainFolder.getParent();
 		String address = domainFolder.getName();
 		for (Data nextData: DefinedDataIterator.definedStrings(currentProgram) ) {
 			Address strAddr = nextData.getMinAddress();
@@ -47,7 +48,7 @@ public class CountReferencedStrings extends GhidraScript {
 			}
 		}
 
-		String xml = "<ghidra_result><referenced>" + referencedCount + "</referenced><total>" + totalCount + "</total><address>" + address + "</address></ghidra_result>";
+		String xml = "<ghidra_result><referenced>" + referencedCount + "</referenced><total>" + totalCount + "</total><address>" + address + "</address><offset>" + offsetFolder.getName() + "</offset></ghidra_result>";
 		FileWriter fw = new FileWriter("/tmp/result.xml", true);
 		fw.write(xml);
 		fw.close();
