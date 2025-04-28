@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import argparse, subprocess, math, pathlib, shutil, multiprocessing
+import argparse, subprocess, math, pathlib, shutil, os
 import xml.etree.ElementTree as ET
 
-def analyze_xml_result():
-    with open("/tmp/result.xml", "r+") as f:
+def analyze_xml_result(name):
+    with open("workspace/" + name + "/results/result.xml", "r+") as f:
         xml = "<ghidra_results>" + f.read() + "</ghidra_results>"
         f.write(xml)
         root = ET.fromstring(xml)
@@ -17,29 +17,35 @@ def analyze_xml_result():
                 maximum = total
                 max_node = child
 
-        print(ET.tostring(max_node, encoding='unicode')
+        print(ET.tostring(max_node, encoding='unicode'))
 
 def run_ghidra_analyze(ghidra_path, filename):
-    cpus = multiprocessing.cpu_count() - 4
-    cmd = ghidra_path + '/support/analyzeHeadless /tmp ' + filename + " -process -recursive -postScript CountReferencedStrings.java"
+    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + "/ghidra " + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
 
-def run_ghidra_import(ghidra_path, filename, languageId, address, offset):
-    address = hex(address).replace('0x', '')
-    offset = hex(offset).replace('0x', '')
-    cmd = ghidra_path + '/support/analyzeHeadless /tmp ' + filename + '/' + offset + '/' + address  + ' -import /tmp/' + filename + ' -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-baseAddr ' + address + ' -loader-fileOffset ' + offset
+def run_ghidra_import(ghidra_path, filename, languageId):
+    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + '/ghidra ' + filename + ' -import workspace/' + filename + '/out/* -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader'    
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     
 def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offset):
     p = pathlib.Path(filename)
-    shutil.copy(filename, "/tmp/" + p.name)
+    o = hex(offset).replace("0x", "")
+    
     for i in range(math.ceil((((end) - (startIdx)) / interval))):
-        print("Importing Address: " + hex(startIdx + (i * interval)))
-        run_ghidra_import(ghidra_path, p.name, languageId, (startIdx + (i * interval)), offset)
+        address = hex(startIdx + (i * interval)).replace('0x', '')
+        print("Importing Address: " + address + " and offset: " + o)
+        ws = "workspace/" + p.name + "/out/" + o + "/" + address
+        os.makedirs(ws, exist_ok=True)
+        os.symlink(filename, ws + "/" + p.name)
+
+    os.makedirs("workspace/" + p.name + "/ghidra", exist_ok=True)
+    os.makedirs("workspace/" + p.name + "/results", exist_ok=True)
+
+    run_ghidra_import(ghidra_path, p.name, languageId)
     
     run_ghidra_analyze(ghidra_path, p.name)
     
-    analyze_xml_result()
+    analyze_xml_result(p.name)
     
 
 def main():
