@@ -76,7 +76,7 @@ def main():
     parser.add_argument('-i', '--interval', type=lambda x: int(x, 16), default=0x10000, const=0x10000, nargs='?')
     parser.add_argument('-o', '--offset', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
     parser.add_argument('-p', '--ghidra-path', type=str)
-    parser.add_argument('--skip', action='store_true', help="Skip Bruteforce and only perform analysis  ")
+    parser.add_argument('--skip', action='store_true', help="Skip Bruteforce and only perform analysis")
 
 
     args = parser.parse_args()
