@@ -4,7 +4,7 @@ This collection of scripts works together to bruteforce the base load address fo
 
 The two `.java` files in the `ghidra_scripts` directory of this repository must be in one of the ghidra_scripts paths (usually this is `~/ghidra_scripts` - if it doesn't exist, create it and link the two `.java` files into it).
 
-You must also know the Ghidra "LanguageId" and pass it into the `BruteForceAddress.py` script.  For example, this is a Ghida LanguageId for ARM: `ARM:LE:32:v7`
+You must also know the Ghidra "LanguageId" and pass it into the `BruteForceAddress.py` script.  For example, this is a Ghidra LanguageId for ARM: `ARM:LE:32:v7`
 
 ## Example Usage
 
