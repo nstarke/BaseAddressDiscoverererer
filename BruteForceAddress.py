@@ -3,10 +3,13 @@
 import argparse, subprocess, math, pathlib, shutil, os
 import xml.etree.ElementTree as ET
 
-def analyze_xml_result(name, offset):
+def analyze_xml_result(name, offset, skip = False):
     with open("workspace/" + name + "/results/" + offset + "/result.xml", "r+") as f:
-        xml = "<ghidra_results>" + f.read() + "</ghidra_results>"
-        f.write(xml)
+        if skip:
+            xml = f.read()
+        else:
+            xml = "<ghidra_results>" + f.read() + "</ghidra_results>"
+            f.write(xml)
         root = ET.fromstring(xml)
         maximum = -1
         max_node = None
@@ -84,7 +87,7 @@ def main():
         p = pathlib.Path(args.filename)
         o = hex(args.offset).replace("0x", "")
         print("Skipping import and analyzing existing results")
-        analyze_xml_result(p.name, o)
+        analyze_xml_result(p.name, o, True)
     else:
         bruteforce(args.ghidra_path, args.start, args.end, args.filename, args.languageId, args.interval, args.offset)
 
