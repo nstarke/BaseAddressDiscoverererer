@@ -44,9 +44,7 @@ public class CountReferencedStrings extends GhidraScript {
 			Address strAddr = nextData.getMinAddress();
 			int refCount = currentProgram.getReferenceManager().getReferenceCountTo(strAddr);
 			totalCount++;
-			if (  refCount > 0 ) {
-				referencedCount++;
-			}
+			referencedCount += refCount;
 		}
 
 		String xml = "<ghidra_result><referenced>" + referencedCount + "</referenced><total>" + totalCount + "</total><address>" + address + "</address><offset>" + offsetFolder.getName() + "</offset></ghidra_result>";
