@@ -83,8 +83,9 @@ def main():
 
 
     args = parser.parse_args()
+    p = pathlib.Path(args.filename)
+    print("Results for: " + p.name)
     if args.skip:
-        p = pathlib.Path(args.filename)
         o = hex(args.offset).replace("0x", "")
         print("Skipping import and analyzing existing results")
         analyze_xml_result(p.name, o, True)
