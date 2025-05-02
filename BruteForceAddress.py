@@ -41,8 +41,8 @@ def run_ghidra_analyze(ghidra_path, filename):
     cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + "/ghidra " + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
 
-def run_ghidra_import(ghidra_path, filename, languageId):
-    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + '/ghidra ' + filename + ' -import workspace/' + filename + '/out/* -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader'    
+def run_ghidra_import(ghidra_path, filename, languageId, offset):
+    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + '/ghidra ' + filename + ' -import workspace/' + filename + '/out/* -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-fileOffset ' + str(offset)    
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     
 def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offset):
@@ -80,7 +80,6 @@ def main():
     parser.add_argument('-o', '--offset', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
     parser.add_argument('-p', '--ghidra-path', type=str)
     parser.add_argument('--skip', action='store_true', help="Skip Bruteforce and only perform analysis")
-
 
     args = parser.parse_args()
     p = pathlib.Path(args.filename)
