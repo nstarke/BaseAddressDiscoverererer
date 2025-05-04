@@ -38,7 +38,7 @@ def analyze_xml_result(name, offset, skip = False):
         print("Offset: " + str(offset_out))
 
 def run_ghidra_analyze(ghidra_path, filename, offset):
-    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + "/ghidra/" + str(offset) + '/' + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
+    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + "/ghidra/" + str(offset) + ' ' + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
 
 def run_ghidra_import(ghidra_path, filename, languageId, offset):
