@@ -27,10 +27,10 @@ def analyze_xml_result(name, offset, skip = False):
         referenced_out = int(referenced_out.text)
         
         address_out = max_node.find(".//address")
-        address_out = int(address_out.text)
+        address_out = int(address_out.text, 16)
 
         offset_out = max_node.find(".//offset")
-        offset_out = int(offset_out.text)
+        offset_out = int(offset_out.text, 16)
 
         print("Total Strings: " + str(total_out))
         print("Referenced Strings: " + str(referenced_out))
