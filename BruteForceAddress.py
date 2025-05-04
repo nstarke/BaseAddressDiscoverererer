@@ -34,8 +34,8 @@ def analyze_xml_result(name, offset, skip = False):
 
         print("Total Strings: " + str(total_out))
         print("Referenced Strings: " + str(referenced_out))
-        print("Base Address: " + str(address_out))
-        print("Offset: " + str(offset_out))
+        print("Base Address: " + hex(address_out))
+        print("Offset: " + hex(offset_out))
 
 def run_ghidra_analyze(ghidra_path, filename, offset):
     cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + "/ghidra/" + str(offset) + ' ' + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
