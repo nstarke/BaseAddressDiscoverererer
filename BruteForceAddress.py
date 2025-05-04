@@ -37,12 +37,12 @@ def analyze_xml_result(name, offset, skip = False):
         print("Base Address: " + str(address_out))
         print("Offset: " + str(offset_out))
 
-def run_ghidra_analyze(ghidra_path, filename):
-    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + "/ghidra " + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
+def run_ghidra_analyze(ghidra_path, filename, offset):
+    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + "/ghidra/" + str(offset) + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
 
 def run_ghidra_import(ghidra_path, filename, languageId, offset):
-    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + '/ghidra ' + filename + ' -import workspace/' + filename + '/out/* -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-fileOffset ' + str(offset)    
+    cmd = ghidra_path + '/support/analyzeHeadless workspace/' + filename + '/ghidra/' + str(offset) + filename + ' -import workspace/' + filename + '/out/* -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-fileOffset ' + str(offset)    
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     
 def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offset):
@@ -60,10 +60,10 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     os.makedirs("workspace/" + p.name + "/results/" + o, exist_ok=True)
 
     print("Running Ghidra Import")
-    run_ghidra_import(ghidra_path, p.name, languageId)
+    run_ghidra_import(ghidra_path, p.name, languageId, o)
     
     print("Running Ghidra Analysis")
-    run_ghidra_analyze(ghidra_path, p.name)
+    run_ghidra_analyze(ghidra_path, p.name, o)
     
     print("Analyzing Results")
     analyze_xml_result(p.name, o)
