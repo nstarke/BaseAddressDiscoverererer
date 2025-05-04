@@ -56,7 +56,7 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
         os.makedirs(ws, exist_ok=True)
         os.symlink(filename, ws + "/" + p.name)
 
-    os.makedirs("workspace/" + p.name + "/ghidra", exist_ok=True)
+    os.makedirs("workspace/" + p.name + "/ghidra/" + o, exist_ok=True)
     os.makedirs("workspace/" + p.name + "/results/" + o, exist_ok=True)
 
     print("Running Ghidra Import")
