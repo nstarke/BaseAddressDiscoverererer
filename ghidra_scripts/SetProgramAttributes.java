@@ -9,6 +9,7 @@ import ghidra.util.task.TaskMonitor;
 import ghidra.framework.model.DomainFile;
 import ghidra.framework.model.DomainFolder;
 import ghidra.program.database.mem.FileBytes;
+import ghidra.program.disassemble.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,15 +40,19 @@ public class SetProgramAttributes extends GhidraScript {
 	    memory.removeBlock(block, monitor);
 	    println("Removed memory block: " + block.getName());
 	}
+
         // Create a memory block at that base address
         MemoryBlock block = memory.createInitializedBlock(
-                "Test",     // block name
+                "ram",     // block name
                 baseAddress,   // base address
                 new ByteArrayInputStream(fileBytes), // input stream of file bytes
                 fileBytes.length,    // size
                 monitor,       // TaskMonitor
                 false          // do not overlay
         );
+
+        Disassembler disassembler = Disassembler.getDisassembler(currentProgram, monitor, null);
+        disassembler.disassemble(baseAddress, null);
         
         println("Memory block created at " + baseAddress.toString());
     }
