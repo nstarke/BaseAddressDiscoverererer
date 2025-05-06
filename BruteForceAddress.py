@@ -9,6 +9,7 @@ def analyze_xml_result(name, offset, skip = False):
             xml = f.read()
         else:
             xml = "<ghidra_results>" + f.read() + "</ghidra_results>"
+            f.truncate(0)
             f.write(xml)
         root = ET.fromstring(xml)
         maximum = -1
