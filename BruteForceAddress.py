@@ -68,7 +68,7 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     print("Analyzing Results")
     analyze_xml_result(p.name, o)
 
-    os.removedirs("workspace/" + p.name + "/out/" + o)
+    shutil.rmtree("workspace/" + p.name + "/out/" + o)
     
 def main():
     parser = argparse.ArgumentParser(
