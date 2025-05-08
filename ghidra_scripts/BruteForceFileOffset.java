@@ -27,13 +27,18 @@ public class BruteForceFileOffset extends GhidraScript {
         Memory memory = currentProgram.getMemory();
         for (int i = startIndex; i < maxIndex; i += 4) {
             Address address = toAddr(i);
-            AddressSet result = disassembler.disassemble(address, null);
-            long size = result.getNumAddresses();
-            boolean success = memory.getBytes(address, buffer);
+            memory.getBytes(address, buffer);
             ByteBuffer bb = ByteBuffer.wrap(buffer);
             bb.order(ByteOrder.LITTLE_ENDIAN);  // or ByteOrder.BIG_ENDIAN
 
-            int programBytes = bb.getInt(0); 
+            int programBytes = bb.getInt(0); // Read the first 4 bytes as an integer
+            if (programBytes == 0) {
+                continue;
+            }
+            
+            AddressSet result = disassembler.disassemble(address, null);
+            long size = result.getNumAddresses();
+            
             //println(String.valueOf(i) + " " + String.valueOf(size));
             Listing listing = currentProgram.getListing();
             listing.clearCodeUnits(currentProgram.getMinAddress(), currentProgram.getMaxAddress(), false);
