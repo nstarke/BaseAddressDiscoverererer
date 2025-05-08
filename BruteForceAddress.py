@@ -4,7 +4,7 @@ import argparse, subprocess, math, pathlib, shutil, os
 import xml.etree.ElementTree as ET
 
 def analyze_xml_result(name, offset, workspace, skip = False):
-    with open(workspace + "/" + name + "/results/" + offset + "/result.xml", "r+") as f:
+    with open(workspace + os.sep + name + os.sep + "results" + os.sep + offset + os.sep + "result.xml", "r+") as f:
         if skip:
             xml = f.read()
         else:
@@ -39,11 +39,11 @@ def analyze_xml_result(name, offset, workspace, skip = False):
         print("Offset: " + hex(offset_out))
 
 def run_ghidra_analyze(ghidra_path, filename, offset, workspace):
-    cmd = ghidra_path + '/support/analyzeHeadless ' + workspace + '/' + filename + "/ghidra/" + str(offset) + ' ' + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
+    cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + filename + os.sep + "ghidra" + os.sep + str(offset) + ' ' + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
 
 def run_ghidra_import(ghidra_path, filename, languageId, offset, workspace):
-    cmd = ghidra_path + '/support/analyzeHeadless ' + workspace + '/' + filename + '/ghidra/' + str(offset) + ' ' + filename + ' -import ' + workspace + '/' + filename + '/out/* -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-fileOffset ' + offset
+    cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + filename + os.sep + 'ghidra' + os.sep + str(offset) + ' ' + filename + ' -import ' + workspace + os.sep + filename + os.sep + 'out' + os.sep + '* -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-fileOffset ' + offset
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     
 def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offset, workspace):
@@ -56,12 +56,12 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     print("Building Address/Offset Filesystem Structure")
     for i in range(math.ceil((((end) - (startIdx)) / interval))):
         address = hex(startIdx + (i * interval)).replace('0x', '')
-        ws = workspace + "/" + p.name + "/out/" + o + "/" + address
+        ws = workspace + os.sep + p.name + os.sep + "out" + os.sep + o + os.sep + address
         os.makedirs(ws, exist_ok=True)
-        os.symlink(filename, ws + "/" + p.name)
+        os.symlink(filename, ws + os.sep + p.name)
 
-    os.makedirs(workspace + "/" + p.name + "/ghidra/" + o, exist_ok=True)
-    os.makedirs(workspace + "/" + p.name + "/results/" + o, exist_ok=True)
+    os.makedirs(workspace + os.sep + p.name + os.sep + "ghidra" + os.sep + o, exist_ok=True)
+    os.makedirs(workspace + os.sep + p.name + os.sep + "results" + os.sep + o, exist_ok=True)
 
     print("Running Ghidra Import")
     run_ghidra_import(ghidra_path, p.name, languageId, o, workspace)
@@ -72,12 +72,12 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     print("Analyzing Results")
     analyze_xml_result(p.name, o, workspace)
 
-    shutil.rmtree(workspace + "/" + p.name + "/out/" + o)
+    shutil.rmtree(workspace + os.sep + p.name + os.sep + "out" + os.sep + o)
     
 def bruteforce_offset(ghidra_path, filename, languageId, workspace):
     p = pathlib.Path(filename)
-    os.makedirs(workspace + '/' + p.name + "/ghidra/offset", exist_ok=True)
-    cmd = ghidra_path + '/support/analyzeHeadless ' + workspace + '/' + p.name + "/ghidra/offset " + p.name + " -import " + filename + " -noanalysis -preScript BruteForceFileOffset.java -processor " + languageId + " -loader BinaryLoader"
+    os.makedirs(workspace + os.sep + p.name + os.sep + "ghidra" + os.sep + "offset", exist_ok=True)
+    cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + p.name + os.sep + "ghidra" + os.sep + "offset " + p.name + " -import " + filename + " -noanalysis -preScript BruteForceFileOffset.java -processor " + languageId + " -loader BinaryLoader"
     output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     fileOffset = output[output.find("<fileOffset>") + len("<fileOffset>"):output.find("</fileOffset>")]
     if fileOffset == -1:
