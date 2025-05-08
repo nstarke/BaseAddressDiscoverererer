@@ -43,7 +43,7 @@ def run_ghidra_analyze(ghidra_path, filename, offset, workspace):
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
 
 def run_ghidra_import(ghidra_path, filename, languageId, offset, workspace):
-    cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + filename + os.sep + 'ghidra' + os.sep + str(offset) + ' ' + filename + ' -import ' + workspace + os.sep + filename + os.sep + 'out' + os.sep + '* -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-fileOffset ' + offset
+    cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + filename + os.sep + 'ghidra' + os.sep + str(offset) + ' ' + filename + ' -import ' + workspace + os.sep + filename + os.sep + 'out -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-fileOffset ' + offset
     subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     
 def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offset, workspace):
