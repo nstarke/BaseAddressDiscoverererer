@@ -76,7 +76,7 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     
 def bruteforce_offset(ghidra_path, filename, languageId, workspace):
     p = pathlib.Path(filename)
-    os.makedirs(workspace + '/' + filename + "/ghidra/offset", exist_ok=True)
+    os.makedirs(workspace + '/' + p.name + "/ghidra/offset", exist_ok=True)
     cmd = ghidra_path + '/support/analyzeHeadless ' + workspace + '/' + p.name + "/ghidra/offset " + p.name + " -import " + filename + " -noanalysis -preScript BruteForceFileOffset.java -processor " + languageId + " -loader BinaryLoader"
     output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     fileOffset = output[output.find("<fileOffset>") + len("<fileOffset>"):output.find("</fileOffset>")]
