@@ -50,6 +50,8 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     p = pathlib.Path(filename)
     o = hex(offset).replace("0x", "")
     
+    shutil.rmtree("workspace/")
+    
     print("Building Address/Offset Filesystem Structure")
     for i in range(math.ceil((((end) - (startIdx)) / interval))):
         address = hex(startIdx + (i * interval)).replace('0x', '')
