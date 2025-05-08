@@ -108,8 +108,10 @@ def main():
         print("Skipping import and analyzing existing results")
         analyze_xml_result(p.name, o, args.workspace, True)
     else:
-        if args.offset == 0:
+        if args.offset == 0: 
             fileOffset = bruteforce_offset(args.ghidra_path, args.filename, args.languageId, args.workspace)
+        else:
+            fileOffset = args.offset
         bruteforce(args.ghidra_path, args.start, args.end, args.filename, args.languageId, args.interval, fileOffset, args.workspace)
 
 if __name__ == "__main__":        
