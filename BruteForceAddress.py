@@ -82,6 +82,8 @@ def bruteforce_offset(ghidra_path, filename, languageId, workspace):
     fileOffset = output[output.find("<fileOffset>") + len("<fileOffset>"):output.find("</fileOffset>")]
     if fileOffset == -1:
         raise Exception("Error: Could not find file offset in Ghidra output")
+    else:
+        print("File Offset Found: " + fileOffset)
     return int(fileOffset)
     
 def main():
