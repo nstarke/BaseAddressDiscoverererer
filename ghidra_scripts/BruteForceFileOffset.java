@@ -9,23 +9,36 @@ import ghidra.program.database.mem.FileBytes;
 import ghidra.program.disassemble.*;
 import ghidra.program.model.address.AddressSet;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 public class BruteForceFileOffset extends GhidraScript {
     public void run() throws Exception {
         int startIndex = 0;
         long maxIndex = 2 * 1024;
         Disassembler disassembler = Disassembler.getDisassembler(currentProgram, monitor, null);
         long highestAddressOffset = -1;
+        int numBytes = 4;
 
+        // Prepare byte array
+        byte[] buffer = new byte[numBytes];
+
+        // Get memory object and read bytes
+        Memory memory = currentProgram.getMemory();
         for (int i = startIndex; i < maxIndex; i += 4) {
             Address address = toAddr(i);
             AddressSet result = disassembler.disassemble(address, null);
             long size = result.getNumAddresses();
+            boolean success = memory.getBytes(address, buffer);
+            ByteBuffer bb = ByteBuffer.wrap(buffer);
+            bb.order(ByteOrder.LITTLE_ENDIAN);  // or ByteOrder.BIG_ENDIAN
 
+            int programBytes = bb.getInt(0); 
             //println(String.valueOf(i) + " " + String.valueOf(size));
             Listing listing = currentProgram.getListing();
             listing.clearCodeUnits(currentProgram.getMinAddress(), currentProgram.getMaxAddress(), false);
 
-            if (size > 10000) {
+            if (size > 10000 && programBytes != 0) {
                 highestAddressOffset = i;
                 break;
             }
