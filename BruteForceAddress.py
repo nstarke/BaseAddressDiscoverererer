@@ -74,6 +74,14 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
 
     shutil.rmtree(workspace + "/" + p.name + "/out/" + o)
     
+def bruteforce_offset(ghidra_path, filename, languageId, workspace):
+    cmd = ghidra_path + '/support/analyzeHeadless ' + workspace + '/' + filename + "/ghidra/offset/" + filename + " -deleteProject -preScript BruteForceFileOffset.java | grep BruteForceFileOffset>"
+    output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
+    fileOffset = output[output.find("<fileOffset>") + len("<fileOffset>"):output.find("</fileOffset>")]
+    if fileOffset == -1:
+        raise Exception("Error: Could not find file offset in Ghidra output")
+    return int(fileOffset)
+    
 def main():
     parser = argparse.ArgumentParser(
         prog="BruteForceDiscover", 
@@ -84,7 +92,7 @@ def main():
     parser.add_argument('-e', '--end', type=lambda x: int(x, 16), default=0xffffffff, const=0xffffffff, nargs='?')
     parser.add_argument('-i', '--interval', type=lambda x: int(x, 16), default=0x10000, const=0x10000, nargs='?')
     parser.add_argument('-o', '--offset', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
-    parser.add_argument('-p', '--ghidra-path', type=str)
+    parser.add_argument('-g', '--ghidra-path', type=str)
     parser.add_argument('-w', '--workspace', type=str, default="workspace", const="workspace", nargs='?')
     parser.add_argument('--skip', action='store_true', help="Skip Bruteforce and only perform analysis")
 
@@ -96,7 +104,9 @@ def main():
         print("Skipping import and analyzing existing results")
         analyze_xml_result(p.name, o, args.workspace, True)
     else:
-        bruteforce(args.ghidra_path, args.start, args.end, args.filename, args.languageId, args.interval, args.offset, args.workspace)
+        if args.offset == 0:
+            fileOffset = bruteforce_offset(args.ghidra_path, args.filename, args.languageId, args.workspace)
+        bruteforce(args.ghidra_path, args.start, args.end, args.filename, args.languageId, args.interval, fileOffset, args.workspace)
 
 if __name__ == "__main__":        
     main()
