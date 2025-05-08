@@ -75,8 +75,9 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     shutil.rmtree(workspace + "/" + p.name + "/out/" + o)
     
 def bruteforce_offset(ghidra_path, filename, languageId, workspace):
-    os.makedirs(workspace + '/' + filename + "/ghidra/offset/" + filename, exist_ok=True)
-    cmd = ghidra_path + '/support/analyzeHeadless ' + workspace + '/' + filename + "/ghidra/offset/" + filename + " -deleteProject -preScript BruteForceFileOffset.java -processor " + languageId + " -loader BinaryLoader | grep BruteForceFileOffset>"
+    p = pathlib.Path(filename)
+    os.makedirs(workspace + '/' + filename + "/ghidra/offset/" + p.name, exist_ok=True)
+    cmd = ghidra_path + '/support/analyzeHeadless ' + workspace + '/' + p.name + "/ghidra/offset/" + filename + " -deleteProject -preScript BruteForceFileOffset.java -processor " + languageId + " -loader BinaryLoader | grep BruteForceFileOffset>"
     output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     fileOffset = output[output.find("<fileOffset>") + len("<fileOffset>"):output.find("</fileOffset>")]
     if fileOffset == -1:
