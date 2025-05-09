@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from cpu_rec.cpu_rec import which_arch
 
 def analyze_xml_result(name, offset, workspace, skip = False):
-    with open(workspace + os.sep + name + os.sep + "results" + os.sep + offset + os.sep + "result.xml", "r+") as f:
+    with open(workspace + os.sep + name + os.sep + "results" + os.sep + offset + os.sep + "results.xml", "r+") as f:
         if skip:
             xml = f.read()
         else:
