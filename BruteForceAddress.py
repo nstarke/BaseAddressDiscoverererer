@@ -86,7 +86,8 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
         offset_element.text = hex(offset_out)
         
         tree = ET.ElementTree(root)
-        tree.write(p, encoding='utf-8', xml_declaration=True)    
+        tree.write(p, encoding='utf-8', xml_declaration=True)  
+        print("Results saved to: " + p)  
     elif format == "txt":
         p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "results.txt"
         with open(p, "w+") as f:
