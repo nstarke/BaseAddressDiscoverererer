@@ -54,3 +54,9 @@ options:
 `--format` is the format of the input file. Can be `txt`, `csv`, `json`, `cli`, or `xml`. 
 
 `--skip` will skip the bruteforce and only perform analysis. This will only work if analysis has previously been performed.
+
+## Components
+
+This tool uses the following components:
+- Ghidra: https://ghidra-sre.org/
+- CPU_REC: https://github.com/airbus-seclab/cpu_rec
