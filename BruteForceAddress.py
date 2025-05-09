@@ -71,20 +71,19 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
     elif format == "xml":
         p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "results.xml"
         root = ET.Element("ghidra_results")
-        name.text = name
         result = ET.SubElement(root, "ghidra_result")
-        name = ET.SubElement(result, "name")
-        name.text = name
-        languagedId = ET.SubElement(result, "languageId")
-        languagedId.text = languagedId
-        total = ET.SubElement(result, "total")
-        total.text = str(total_out)
-        referenced = ET.SubElement(result, "referenced")
-        referenced.text = str(referenced_out)
-        address = ET.SubElement(result, "address")
-        address.text = hex(address_out)
-        offset = ET.SubElement(result, "offset")
-        offset.text = hex(offset_out)
+        name_element = ET.SubElement(result, "name")
+        name_element.text = name
+        languagedId_element = ET.SubElement(result, "languageId")
+        languagedId_element.text = languagedId
+        total_element = ET.SubElement(result, "total")
+        total_element.text = str(total_out)
+        referenced_element = ET.SubElement(result, "referenced")
+        referenced_element.text = str(referenced_out)
+        address_element = ET.SubElement(result, "address")
+        address_element.text = hex(address_out)
+        offset_element = ET.SubElement(result, "offset")
+        offset_element.text = hex(offset_out)
         
         tree = ET.ElementTree(root)
         tree.write(p, encoding='utf-8', xml_declaration=True)    
