@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Installing Git Submodules..."
 git submodule update --init --recursive
 
 echo "Need to install 'unzip' and 'openjdk-21-jdk' to run Ghidra"
@@ -12,11 +13,15 @@ if [ ! -d ~/ghidra_11.3.2_PUBLIC ]; then
     unzip ~/ghidra_11.3.2_PUBLIC_20250415.zip -d ~/
     rm ~/ghidra_11.3.2_PUBLIC_20250415.zip
     echo "Ghidra 11.3.2 downloaded and extracted to ~/ghidra_11.3.2_PUBLIC"
+else
+    echo "Ghidra 11.3.2 already installed in ~/ghidra_11.3.2_PUBLIC"
 fi
 
 if [ ! -d ~/ghidra_scripts ]; then
     echo "Creating ~/ghidra_scripts directory..."
     mkdir ~/ghidra_scripts
+else
+    echo "~/ghidra_scripts directory already exists"
 fi
 
 echo "Copying scripts to ~/ghidra_scripts..."
