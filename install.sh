@@ -3,8 +3,9 @@
 echo "Installing Git Submodules..."
 git submodule update --init --recursive
 
-echo "Need to install 'unzip' and 'openjdk-21-jdk' to run Bruteforce"
+echo "Need to install 'unzip', 'python3-virtualenv', and 'openjdk-21-jdk' to run Bruteforce"
 dpkg -s unzip &> /dev/null && echo "unzip already installed" || sudo apt install -y unzip
+dpkg -s python3-virtualenv &> /dev/null && echo "python3-virtualenv already installed" || sudo apt install -y python3-virtualenv
 dpkg -s openjdk-21-jdk &> /dev/null && echo "openjdk-21-jdk already installed"|| sudo apt install -y openjdk-21-jdk
 
 if [ ! -d ~/ghidra_11.3.2_PUBLIC ]; then
@@ -35,5 +36,20 @@ fi
 
 echo "Copying scripts to ~/ghidra_scripts..."
 cp ghidra_scripts/* ~/ghidra_scripts/
+
+if [ ! -d .venv ]; then
+    echo "Creating virtual environment..."
+    virtualenv .venv
+else
+    echo "Virtual environment already exists"
+fi
+
+echo "Activating virtual environment..."
+source .venv/bin/activate
+
+echo "Installing requirements..."
+pip install -r requirements.txt
+
+echo "You will need to run 'source .venv/bin/activate' to activate the virtual environment before running the scripts."
 echo "all done!"
 exit 0
