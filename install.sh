@@ -22,5 +22,5 @@ fi
 echo "Copying scripts to ~/ghidra_scripts..."
 cp ghidra_scripts/* ~/ghidra_scripts/
 
-echo "all done!'
+echo "all done!"
 exit 0
