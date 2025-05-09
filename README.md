@@ -17,9 +17,10 @@ Or for Windows 10/11:
 ```batch
 run.bat %INPUT_RAW_BINARY_FILE_PATH%
 ```
+
 ## Performance Note
 
-By default, the tool performs a brute force search of the most significant 16 bits of the 32-bit address space. Even on beefy machines, this can take days.  **This tool is best run on a server**
+By default, the tool performs a brute force search of the most significant 16 bits of the 32-bit address space. Even on beefy machines, this can take days.  The workspace directory can take several hundred gigabytes during run time.  **This tool is best run on a server**
 
 ## Supported Operating Systems
 
