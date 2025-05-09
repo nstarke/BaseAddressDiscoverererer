@@ -50,7 +50,7 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
         print("Base Address (hex): " + address_str)
         print("Offset (hex): " + offset_str)
     elif format == "json":
-        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.json"
+        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "results.json"
         result = {
             "name": name,
             "languageId": languagedId,
@@ -63,13 +63,13 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
             json.dump(result, f, indent=4)
         print("Results saved to: " + p)
     elif format == "csv":
-        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.csv"
+        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "results.csv"
         with open(p, "w+") as f:
             f.write("Name,LanguageId,Total,Referenced,Address,Offset\n")
             f.write('"' + name + '","' + languagedId + '",' + str(total_out) + "," + str(referenced_out) + "," + address_str + "," + offset_str + "\n")
         print("Results saved to: " + p)
     elif format == "xml":
-        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.xml"
+        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "results.xml"
         root = ET.Element("ghidra_results")
         name.text = name
         result = ET.SubElement(root, "ghidra_result")
@@ -89,7 +89,7 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
         tree = ET.ElementTree(root)
         tree.write(p, encoding='utf-8', xml_declaration=True)    
     elif format == "txt":
-        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.txt"
+        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "results.txt"
         with open(p, "w+") as f:
             f.write("Name: " + name + "\n")
             f.write("LanguageId: " + languagedId + "\n")
