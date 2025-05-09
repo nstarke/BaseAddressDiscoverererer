@@ -7,13 +7,20 @@ dpkg -s unzip &> /dev/null || sudo apt install -y unzip
 dpkg -s openjdk-21-jdk &> /dev/null || sudo apt install -y openjdk-21-jdk
 
 if [ ! -d ~/ghidra_11.3.2_PUBLIC ]; then
+    echo "Downloading Ghidra 11.3.2..."
     wget -P ~ https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.3.2_build/ghidra_11.3.2_PUBLIC_20250415.zip
     unzip ~/ghidra_11.3.2_PUBLIC_20250415.zip -d ~/
     rm ~/ghidra_11.3.2_PUBLIC_20250415.zip
+    echo "Ghidra 11.3.2 downloaded and extracted to ~/ghidra_11.3.2_PUBLIC"
 fi
 
 if [ ! -d ~/ghidra_scripts ]; then
+    echo "Creating ~/ghidra_scripts directory..."
     mkdir ~/ghidra_scripts
 fi
 
+echo "Copying scripts to ~/ghidra_scripts..."
 cp ghidra_scripts/* ~/ghidra_scripts/
+
+echo "all done!'
+exit 0
