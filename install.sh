@@ -3,8 +3,8 @@
 git submodule update --init --recursive
 
 echo "Need to install 'unzip' and 'openjdk-21-jdk' to run Ghidra"
-dpkg -s unzip &> /dev/null || sudo apt install -y unzip
-dpkg -s openjdk-21-jdk &> /dev/null || sudo apt install -y openjdk-21-jdk
+dpkg -s unzip &> /dev/null && echo "unzip already installed" || sudo apt install -y unzip
+dpkg -s openjdk-21-jdk &> /dev/null && echo "openjdk-21-jdk already installed"|| sudo apt install -y openjdk-21-jdk
 
 if [ ! -d ~/ghidra_11.3.2_PUBLIC ]; then
     echo "Downloading Ghidra 11.3.2..."
