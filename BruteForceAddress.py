@@ -133,7 +133,7 @@ def bruteforce(ghidra_path, startIdx, end, filename, languageId, interval, offse
     result = analyze_xml_result(p.name, o, workspace)
     
     print("Saving Results")
-    save_results(p.name, result[0], result[1], result[2], result[3], workspace, workspace, format)
+    save_results(p.name, result[0], result[1], result[2], result[3], workspace, languageId, format)
     shutil.rmtree(workspace + os.sep + p.name + os.sep + "out" + os.sep + o)
     
 def bruteforce_offset(ghidra_path, filename, languageId, workspace):
