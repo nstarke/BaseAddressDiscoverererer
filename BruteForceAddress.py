@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from cpu_rec.cpu_rec import which_arch
 
 def analyze_xml_result(name, offset, workspace, skip = False):
-    with open(workspace + os.sep + name + os.sep + "results" + os.sep + offset + os.sep + "results.xml", "r+") as f:
+    with open(workspace + os.sep + name + os.sep + "results" + os.sep + offset + os.sep + "result.xml", "r+") as f:
         if skip:
             xml = f.read()
         else:
@@ -193,7 +193,7 @@ def main():
     parser.add_argument('-g', '--ghidra-path', type=str)
     parser.add_argument('-w', '--workspace', type=str, default="workspace", const="workspace", nargs='?')
     parser.add_argument('-l', '--languageId', type=str)
-    parser.add_argument('-f', '--format', type=str, default="txt", const="tzt", nargs='?')
+    parser.add_argument('-f', '--format', type=str, default="txt", const="txt", nargs='?')
     parser.add_argument('--skip', action='store_true', help="Skip Bruteforce and only perform analysis")
 
     args = parser.parse_args()
