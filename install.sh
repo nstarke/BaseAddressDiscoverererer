@@ -17,6 +17,15 @@ else
     echo "Ghidra 11.3.2 already installed in ~/ghidra_11.3.2_PUBLIC"
 fi
 
+if [ -n "$GHIDRA_HOME" ]; then
+    echo "Ghidra home already set to $GHIDRA_HOME"
+else
+    echo "Setting Ghidra home to ~/ghidra_11.3.2_PUBLIC..."
+    export GHIDRA_HOME=~/ghidra_11.3.2_PUBLIC
+    echo "export GHIDRA_HOME=~/ghidra_11.3.2_PUBLIC" >> ~/.bashrc
+    source ~/.bashrc
+fi
+
 if [ ! -d ~/ghidra_scripts ]; then
     echo "Creating ~/ghidra_scripts directory..."
     mkdir ~/ghidra_scripts
