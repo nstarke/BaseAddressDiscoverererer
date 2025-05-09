@@ -1,0 +1,3 @@
+[submodule "cpu_rec"]
+	path = cpu_rec
+	url = https://github.com/airbus-seclab/cpu_rec

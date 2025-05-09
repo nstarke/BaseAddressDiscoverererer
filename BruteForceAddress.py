@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import argparse, subprocess, math, pathlib, shutil, os
+import argparse, subprocess, math, pathlib, shutil, os, sys
 import xml.etree.ElementTree as ET
+from cpu_rec.cpu_rec import which_arch
 
 def analyze_xml_result(name, offset, workspace, skip = False):
     with open(workspace + "/" + name + "/results/" + offset + "/result.xml", "r+") as f:
@@ -85,19 +86,49 @@ def bruteforce_offset(ghidra_path, filename, languageId, workspace):
     else:
         print("File Offset Found: " + fileOffset)
     return int(fileOffset)
+
+def detect_architecture(filename):
+    with open(filename, 'rb') as f:
+        data = f.read()
+        arch = which_arch(data)
+    return convert_cpu_rec_to_ghidra(arch)
+
+def convert_cpu_rec_to_ghidra(arch):
+    if 'ARM' in arch:
+        if 'el' in arch or 'hf' in arch:
+            return "ARM:LE:32:v8"
+        elif 'eb' in arch:
+            return "ARM:BE:32:v8"
+    if 'AARCH64' in arch:
+        raise Exception("AARCH64 not supported")
+    if 'PPC' in arch:
+        if 'el' in arch:
+            return "PPC:LE:32:default"
+        elif 'eb' in arch:
+            return "PPC:BE:32:default"
+    if 'MIPS' in arch:
+        if 'el' in arch:
+            return "MIPS:LE:32:default"
+        elif 'eb' in arch:
+            return "MIPS:BE:32:default"
+    if 'X86-64' in arch:
+        return "x86:LE:64:default"
+    if 'X86' in arch:
+        return "x86:LE:32:default"
+    raise Exception("Error: Could not auto detect architecture - you must manually set the languageId")
     
 def main():
     parser = argparse.ArgumentParser(
         prog="BruteForceDiscover", 
         description="A script that takes raw binary programs and bruteforces their load offset")
     parser.add_argument('filename')
-    parser.add_argument('languageId')
     parser.add_argument('-s', '--start', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
     parser.add_argument('-e', '--end', type=lambda x: int(x, 16), default=0xffffffff, const=0xffffffff, nargs='?')
     parser.add_argument('-i', '--interval', type=lambda x: int(x, 16), default=0x10000, const=0x10000, nargs='?')
     parser.add_argument('-o', '--offset', type=lambda x: int(x, 16), default=0, const=0, nargs='?')
     parser.add_argument('-g', '--ghidra-path', type=str)
     parser.add_argument('-w', '--workspace', type=str, default="workspace", const="workspace", nargs='?')
+    parser.add_argument('-l', '--languageId', type=str)
     parser.add_argument('--skip', action='store_true', help="Skip Bruteforce and only perform analysis")
 
     args = parser.parse_args()
@@ -108,9 +139,14 @@ def main():
         print("Skipping import and analyzing existing results")
         analyze_xml_result(p.name, o, args.workspace, True)
     else:
+        if not args.languageId:
+            arch = detect_architecture(args.filename)
+            print("LanguageId auto detected: " + arch)
+        else:
+            arch = args.languageId
         if args.offset == 0:
-            fileOffset = bruteforce_offset(args.ghidra_path, args.filename, args.languageId, args.workspace)
-        bruteforce(args.ghidra_path, args.start, args.end, args.filename, args.languageId, args.interval, fileOffset, args.workspace)
+            fileOffset = bruteforce_offset(args.ghidra_path, args.filename, arch, args.workspace)
+        bruteforce(args.ghidra_path, args.start, args.end, args.filename, arch, args.interval, fileOffset, args.workspace)
 
 if __name__ == "__main__":        
     main()
