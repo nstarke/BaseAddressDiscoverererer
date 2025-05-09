@@ -3,8 +3,9 @@
 echo "Installing Git Submodules..."
 git submodule update --init --recursive
 
-echo "Need to install 'unzip' and 'openjdk-21-jdk' to run Ghidra"
+echo "Need to install 'unzip', 'python3-venv', and 'openjdk-21-jdk' to run Bruteforce"
 dpkg -s unzip &> /dev/null && echo "unzip already installed" || sudo apt install -y unzip
+dpkg -s python3-venv &> /dev/null && echo "python3-venv already installed" || sudo apt install -y python3-venv
 dpkg -s openjdk-21-jdk &> /dev/null && echo "openjdk-21-jdk already installed"|| sudo apt install -y openjdk-21-jdk
 
 if [ ! -d ~/ghidra_11.3.2_PUBLIC ]; then
@@ -38,7 +39,7 @@ cp ghidra_scripts/* ~/ghidra_scripts/
 
 if [ ! -d .venv ]; then
     echo "Creating virtual environment..."
-    python3 -m venv .venv
+    virtualenv .venv
 else
     echo "Virtual environment already exists"
 fi
