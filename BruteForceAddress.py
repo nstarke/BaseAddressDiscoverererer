@@ -50,6 +50,7 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
         print("Base Address (hex): " + address_str)
         print("Offset (hex): " + offset_str)
     elif format == "json":
+        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.json"
         result = {
             "name": name,
             "languageId": languagedId,
@@ -58,13 +59,17 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
             "address": address_out,
             "offset": offset_out
         }
-        with open(workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.json", "w+") as f:
+        with open(p, "w+") as f:
             json.dump(result, f, indent=4)
+        print("Results saved to: " + p)
     elif format == "csv":
-        with open(workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.csv", "w+") as f:
+        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.csv"
+        with open(p, "w+") as f:
             f.write("Name,LanguageId,Total,Referenced,Address,Offset\n")
             f.write('"' + name + '","' + languagedId + '",' + str(total_out) + "," + str(referenced_out) + "," + address_str + "," + offset_str + "\n")
+        print("Results saved to: " + p)
     elif format == "xml":
+        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.xml"
         root = ET.Element("ghidra_results")
         name.text = name
         result = ET.SubElement(root, "ghidra_result")
@@ -82,15 +87,17 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
         offset.text = hex(offset_out)
         
         tree = ET.ElementTree(root)
-        tree.write(workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.xml", encoding='utf-8', xml_declaration=True)    
+        tree.write(p, encoding='utf-8', xml_declaration=True)    
     elif format == "txt":
-        with open(workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.txt", "w+") as f:
+        p = workspace + os.sep + name + os.sep + "results" + os.sep + offset_str + os.sep + "result.txt"
+        with open(p, "w+") as f:
             f.write("Name: " + name + "\n")
             f.write("LanguageId: " + languagedId + "\n")
             f.write("Total Strings: " + str(total_out) + "\n")
             f.write("Referenced Strings: " + str(referenced_out) + "\n")
             f.write("Base Address: " + hex(address_out) + "\n")
             f.write("Offset: " + hex(offset_out) + "\n")
+        print("Results saved to: " + p)
 
 def run_ghidra_analyze(ghidra_path, filename, offset, workspace):
     cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + filename + os.sep + "ghidra" + os.sep + str(offset) + ' ' + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java"
