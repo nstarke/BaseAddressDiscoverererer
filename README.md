@@ -6,9 +6,22 @@ This tool will help gather the necessary information to reverse engineer a raw b
 
 If you have a binary file and you want to quickly get started, there is a helper script called `run.sh` that will install all necessary components, configure the envinronment, and run the tool for you. You can run it like this:
 
+For Ubuntu/Debian:
+
 ```bash
 bash run.sh $INPUT_RAW_BINARY_FILE_PATH
 ```
+
+Or for Windows 10/11:
+
+```batch
+run.bat %INPUT_RAW_BINARY_FILE_PATH%
+```
+
+## Supported Operating Systems
+
+* Ubuntu (Tested against 24.04)
+* Windows (Tested against 11)
 
 ## Running the Python Script directly
 
