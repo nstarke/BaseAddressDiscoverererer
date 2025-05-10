@@ -154,6 +154,9 @@ def detect_architecture(filename):
     with open(filename, 'rb') as f:
         data = f.read()
         arch = which_arch(data)
+        if not arch:
+            print("Error: Could not detect architecture")
+            sys.exit(1)
     return convert_cpu_rec_to_ghidra(arch)
 
 def convert_cpu_rec_to_ghidra(arch):
