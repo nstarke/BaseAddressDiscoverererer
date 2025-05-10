@@ -143,7 +143,7 @@ def bruteforce_offset(ghidra_path, filename, languageId, workspace):
     cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + p.name + os.sep + "ghidra" + os.sep + "offset " + p.name + " -import " + filename + " -noanalysis -preScript BruteForceFileOffset.java -processor " + languageId + " -loader BinaryLoader"
     output = subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
     fileOffset = output[output.find("<fileOffset>") + len("<fileOffset>"):output.find("</fileOffset>")]
-    if fileOffset == -1:
+    if fileOffset == str(-1):
         print("Error: Could not find file offset in Ghidra output")
         sys.exit(1)
     else:
