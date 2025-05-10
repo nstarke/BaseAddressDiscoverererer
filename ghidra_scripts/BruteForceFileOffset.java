@@ -15,7 +15,6 @@ import java.nio.ByteOrder;
 public class BruteForceFileOffset extends GhidraScript {
     public void run() throws Exception {
         int startIndex = 0;
-        long maxIndex = 2 * 1024;
         Disassembler disassembler = Disassembler.getDisassembler(currentProgram, monitor, null);
         long highestAddressOffset = -1;
         int numBytes = 4;
@@ -25,6 +24,11 @@ public class BruteForceFileOffset extends GhidraScript {
 
         // Get memory object and read bytes
         Memory memory = currentProgram.getMemory();
+        AddressSetView addressSet = currentProgram.getMemory().getLoadedAndInitializedAddressSet();                                                                        
+        Address minAddress = addressSet.getMinAddress();
+        Address maxAddress = addressSet.getMaxAddress();
+        long totalSize = maxAddress.getOffset() - minAddress.getOffset(); 
+        long maxIndex = totalSize / 4;   
         for (int i = startIndex; i < maxIndex; i += 4) {
             Address address = toAddr(i);
             memory.getBytes(address, buffer);
@@ -43,7 +47,7 @@ public class BruteForceFileOffset extends GhidraScript {
             Listing listing = currentProgram.getListing();
             listing.clearCodeUnits(currentProgram.getMinAddress(), currentProgram.getMaxAddress(), false);
 
-            if (size > 10000 && programBytes != 0) {
+            if (size > 1000 && programBytes != 0) {
                 highestAddressOffset = i;
                 break;
             }
