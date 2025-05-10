@@ -60,7 +60,7 @@ xcopy /Y /E ghidra_scripts "%USERPROFILE%\ghidra_scripts"
 :: Create and activate virtual environment
 if not exist ".venv" (
     echo Creating virtual environment...
-    virtualenv .venv
+    python -m virtualenv .venv
 ) else (
     echo Virtual environment already exists
 )
