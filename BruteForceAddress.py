@@ -237,7 +237,9 @@ def main():
             arch = args.languageId
         if args.offset == 0:
             fileOffset = bruteforce_offset(ghidra_home, args.filename, arch, args.workspace)
-        bruteforce(ghidra_home, args.start, args.end, args.filename, arch, args.interval, args.offset, args.workspace, args.format)
+        else:
+            fileOffset = args.offset
+        bruteforce(ghidra_home, args.start, args.end, args.filename, arch, args.interval, fileOffset, args.workspace, args.format)
 
 if __name__ == "__main__":        
     main()
