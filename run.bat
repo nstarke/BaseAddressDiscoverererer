@@ -8,7 +8,7 @@ if "%~1"=="" (
 )
 
 set FILENAME=%~1
-set GHIDRA_VERSION=ghidra_11.3.2_PUBLIC
+set GHIDRA_VERSION=ghidra_12.0_PUBLIC
 set GHIDRA_HOME=%USERPROFILE%\%GHIDRA_VERSION%
 :: Run install script
 call install.bat

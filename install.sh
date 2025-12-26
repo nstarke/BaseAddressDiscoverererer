@@ -8,22 +8,22 @@ dpkg -s unzip &> /dev/null && echo "unzip already installed" || sudo apt install
 dpkg -s python3-virtualenv &> /dev/null && echo "python3-virtualenv already installed" || sudo apt install -y python3-virtualenv
 dpkg -s openjdk-21-jdk &> /dev/null && echo "openjdk-21-jdk already installed"|| sudo apt install -y openjdk-21-jdk
 
-if [ ! -d ~/ghidra_11.3.2_PUBLIC ]; then
-    echo "Downloading Ghidra 11.3.2..."
-    wget -P ~ https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.3.2_build/ghidra_11.3.2_PUBLIC_20250415.zip
-    unzip ~/ghidra_11.3.2_PUBLIC_20250415.zip -d ~/
-    rm ~/ghidra_11.3.2_PUBLIC_20250415.zip
-    echo "Ghidra 11.3.2 downloaded and extracted to ~/ghidra_11.3.2_PUBLIC"
+if [ ! -d ~/ghidra_12.0_PUBLIC ]; then
+    echo "Downloading Ghidra 12.0..."
+    wget -P ~ https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.0_build/ghidra_12.0_PUBLIC_20251205.zip
+    unzip ~/ghidra_12.0_PUBLIC_20251205.zip -d ~/
+    rm ~/ghidra_12.0_PUBLIC_20251205.zip
+    echo "Ghidra 12.0 downloaded and extracted to ~/ghidra_12.0_PUBLIC"
 else
-    echo "Ghidra 11.3.2 already installed in ~/ghidra_11.3.2_PUBLIC"
+    echo "Ghidra 12.0 already installed in ~/ghidra_12.0_PUBLIC"
 fi
 
 if [ -n "$GHIDRA_HOME" ]; then
     echo "Ghidra home already set to $GHIDRA_HOME"
 else
-    echo "Setting Ghidra home to ~/ghidra_11.3.2_PUBLIC..."
-    export GHIDRA_HOME=~/ghidra_11.3.2_PUBLIC
-    echo "export GHIDRA_HOME=~/ghidra_11.3.2_PUBLIC" >> ~/.bashrc
+    echo "Setting Ghidra home to ~/ghidra_12.0_PUBLIC..."
+    export GHIDRA_HOME=~/ghidra_12.0_PUBLIC
+    echo "export GHIDRA_HOME=~/ghidra_12.0_PUBLIC" >> ~/.bashrc
     source ~/.bashrc
 fi
 

@@ -23,18 +23,18 @@ if %errorlevel% neq 0 (
 )
 
 :: Set path variables
-set GHIDRA_VERSION=ghidra_11.3.2_PUBLIC
-set GHIDRA_ZIP=%USERPROFILE%\%GHIDRA_VERSION%_20250415.zip
+set GHIDRA_VERSION=ghidra_12.0_PUBLIC
+set GHIDRA_ZIP=%USERPROFILE%\%GHIDRA_VERSION%_20251205.zip
 set GHIDRA_HOME=%USERPROFILE%\%GHIDRA_VERSION%
 
 if not exist "%GHIDRA_HOME%" (
     echo Downloading Ghidra 11.3.2...
-    powershell -Command "Invoke-WebRequest -Uri https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.3.2_build/%GHIDRA_VERSION%_20250415.zip -OutFile '%GHIDRA_ZIP%'"
+    powershell -Command "Invoke-WebRequest -Uri https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.0_build/%GHIDRA_VERSION%_20251205.zip -OutFile '%GHIDRA_ZIP%'"
     powershell -Command "Expand-Archive -Path '%GHIDRA_ZIP%' -DestinationPath '%USERPROFILE%'"
     del "%GHIDRA_ZIP%"
-    echo Ghidra 11.3.2 downloaded and extracted to %GHIDRA_HOME%
+    echo Ghidra 12.0 downloaded and extracted to %GHIDRA_HOME%
 ) else (
-    echo Ghidra 11.3.2 already installed in %GHIDRA_HOME%
+    echo Ghidra 12.0 already installed in %GHIDRA_HOME%
 )
 
 :: Set GHIDRA_HOME if not already set
