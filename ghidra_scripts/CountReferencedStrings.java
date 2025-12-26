@@ -49,9 +49,9 @@ public class CountReferencedStrings extends GhidraScript {
 			totalCount++;
 			referencedCount += refCount;
 		}
-
+		String workspaceDirectory = System.getenv("BAD_WORKSPACE");
 		String xml = "<ghidra_result><referenced>" + referencedCount + "</referenced><total>" + totalCount + "</total><address>" + address + "</address><offset>" + offsetFolder.getName() + "</offset></ghidra_result>";
-		FileWriter fw = new FileWriter("workspace/" + name + "/results/" + offsetFolder.getName() + "/result.xml", true);
+		FileWriter fw = new FileWriter(workspaceDirectory + "/" + name + "/results/" + offsetFolder.getName() + "/result.xml", true);
 		fw.write(xml);
 		fw.close();
 		println("File appended to");

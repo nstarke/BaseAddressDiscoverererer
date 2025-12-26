@@ -100,8 +100,10 @@ def save_results(name, total_out, referenced_out, address_out, offset_out, works
         print("Results saved to: " + p)
 
 def run_ghidra_analyze(ghidra_path, filename, offset, workspace):
+    env = os.environ.copy()
+    env["BAD_WORKSPACE"] = workspace
     cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + filename + os.sep + "ghidra" + os.sep + str(offset) + ' ' + filename + " -deleteProject -process -recursive -preScript SetProgramAttributes.java -postScript CountReferencedStrings.java -max-cpu " + str(os.cpu_count())
-    subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL)
+    subprocess.check_output(cmd, env=env, shell=True, text=True, stderr=subprocess.DEVNULL)
 
 def run_ghidra_import(ghidra_path, filename, languageId, offset, workspace):
     cmd = ghidra_path + os.sep + 'support' + os.sep + 'analyzeHeadless ' + workspace + os.sep + filename + os.sep + 'ghidra' + os.sep + str(offset) + ' ' + filename + ' -import ' + workspace + os.sep + filename + os.sep + 'out -recursive -noanalysis -processor "' + languageId + '" -loader BinaryLoader -loader-fileOffset ' + offset + ' -max-cpu ' + str(os.cpu_count())
