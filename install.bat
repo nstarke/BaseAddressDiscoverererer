@@ -28,7 +28,7 @@ set GHIDRA_ZIP=%USERPROFILE%\%GHIDRA_VERSION%_20251205.zip
 set GHIDRA_HOME=%USERPROFILE%\%GHIDRA_VERSION%
 
 if not exist "%GHIDRA_HOME%" (
-    echo Downloading Ghidra 11.3.2...
+    echo Downloading Ghidra 12.0...
     powershell -Command "Invoke-WebRequest -Uri https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.0_build/%GHIDRA_VERSION%_20251205.zip -OutFile '%GHIDRA_ZIP%'"
     powershell -Command "Expand-Archive -Path '%GHIDRA_ZIP%' -DestinationPath '%USERPROFILE%'"
     del "%GHIDRA_ZIP%"
