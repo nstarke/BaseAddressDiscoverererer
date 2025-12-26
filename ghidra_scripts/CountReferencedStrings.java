@@ -21,7 +21,7 @@ import java.util.*;
 import ghidra.app.script.GhidraScript;
 import ghidra.program.model.address.Address;
 import ghidra.program.model.mem.Memory;
-import ghidra.program.util.DefinedDataIterator;
+import ghidra.program.util.DefinedStringIterator;
 import ghidra.program.model.listing.Data;
 import ghidra.framework.model.DomainFile;
 import ghidra.framework.model.DomainFolder;
@@ -40,7 +40,10 @@ public class CountReferencedStrings extends GhidraScript {
 		DomainFolder domainFolder = domainFile.getParent();
 		DomainFolder offsetFolder = domainFolder.getParent();
 		String address = domainFolder.getName();
-		for (Data nextData: DefinedDataIterator.definedStrings(currentProgram) ) {
+
+		DefinedStringIterator it = DefinedStringIterator.forProgram(currentProgram);
+		while (it.hasNext()) {
+			Data nextData = it.next();
 			Address strAddr = nextData.getMinAddress();
 			int refCount = currentProgram.getReferenceManager().getReferenceCountTo(strAddr);
 			totalCount++;
