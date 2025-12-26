@@ -33,7 +33,7 @@ public class SetProgramAttributes extends GhidraScript {
         program.setImageBase(baseAddress, true);
         Disassembler disassembler = Disassembler.getDisassembler(program, monitor, null);
         disassembler.disassemble(baseAddress, null);
-        
+        setAnalysisOption(currentProgram, "Aggressive Instruction Finder", "true");
         println("Memory block created at " + baseAddress.toString());
     }
 }
