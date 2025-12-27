@@ -9,7 +9,9 @@ def analyze_xml_result(name, offset, workspace, skip = False):
         if skip:
             xml = f.read()
         else:
+            f.seek(0)
             xml = "<ghidra_results>" + f.read() + "</ghidra_results>"
+            f.seek(0)
             f.truncate(0)
             f.write(xml)
         root = ET.fromstring(xml)
