@@ -25,7 +25,7 @@ public class SetProgramAttributes extends GhidraScript {
         DomainFolder addressFolder = domainFile.getParent();
         String addressStr = addressFolder.getName();
         long address = Long.parseLong(addressStr, 16);
-	println("Address: " + addressStr);
+        println("Address: " + addressStr);
         // Set your desired base address
         Address baseAddress = toAddr(address);
         
